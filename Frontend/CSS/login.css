@@ -1,0 +1,127 @@
+body{
+    margin: 0;
+    background-image: url('../HTML/assets/LoginBackground.jpg');
+    background-size: cover;
+    background-position: center;
+    height: 80vh;
+}
+.login-container{
+    display: flex;
+    flex-direction: column;
+    margin-top: 150px;
+    margin-left: auto;
+    margin-right: auto;
+    align-items: center;
+    justify-content: center;
+    height: 250px;
+    width: 400px;
+    background-color: #8da0ed;
+    border-radius: 50px;
+
+}
+
+.login-grid{
+    margin-left: 20px;
+    margin-right: 20px;
+    width: 60%;
+    display: grid;
+    grid-template-columns: 1fr;
+
+    /* background-color:azure; */
+    align-items: center;
+    justify-items: left;
+}
+
+
+
+.login-input{
+    width: 100%;
+    height: 40px;
+    border-radius: 20px;
+    border: none;
+    margin-bottom: 10px;
+    transition: 0.3s;
+    /* padding-left: 15px; */
+    /* padding-right: 5px; */
+    /* background-color:aqua; */
+}
+
+.login-input:hover{
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    transition: 0.3s;
+}
+
+.login-input:focus{
+    outline: none;
+    box-shadow: 5px 5px 10px rgb(72, 233, 77);
+}
+
+.login-buttons{
+    display: flex;
+    flex-direction: row;
+    width: 50%;
+    gap: 10px;
+    align-items: center;
+    justify-content: right;
+    /* background-color: aliceblue; */
+    padding-top: 0px;
+    padding-bottom: 20px;
+}
+
+.button{
+    background-color:rgb(84, 40, 231);
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 10px 20px;
+    transition: 0.3s;
+}
+.button:hover{
+    transform: scale(1.05);
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+}
+.button:active{
+    background-color: #c8bef2;
+    border: 2px solid #15d17c;
+}
+
+
+
+
+.password-container{
+    position: relative;
+    display: grid;
+    grid-template-columns: 4fr 1fr;
+    align-items: center;
+    justify-items: left;
+    gap: 10px;
+    width: 100%;
+}
+
+
+
+.toggle-password{
+
+    width: 90%;
+    height: 40px;
+    margin-bottom: 10px;
+    border-radius: 50%;
+    border: 1px solid #ccc;
+    /* background-color: #5430e7; */
+    background-image: url('../HTML/assets/hide-password.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    cursor: pointer;
+    color: white;
+    transition: 0.5s;
+    
+    
+}
+.toggle-password:hover{
+    transform: scale(1.05);
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    background-color: #ee6fdf;
+}
+

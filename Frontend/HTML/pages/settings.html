@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+    <body>
+        <div class = "settings-container">
+            <div class = "switch-container">
+                <h2>LED</h2>
+                <label class="switch">
+                    <input type="checkbox" id = "checkbox-led" onchange="updateLedStatus(this.checked)">
+                    <span class="slider">
+                        <span class = "slider-toggle"></span>
+                    </span>  
+                </label>
+                <h2>LED Status: <span id="led-status">OFF</span></h2>
+            </div>
+            <div class = "switch-container">
+                <h2>RELAY</h2>
+                <label class="switch">
+                    <input type="checkbox" id = "checkbox-relay" onchange="updateRelayStatus(this.checked)">
+                    <span class="slider">
+                        <span class = "slider-toggle"></span>
+                    </span>  
+                </label>
+                <h2>RELAY Status: <span id="relay-status">OFF</span></h2>
+            </div>
+            <div class = "switch-container">
+                <h2>BUZZER</h2>
+                <label class="switch">
+                    <input type="checkbox" id = "checkbox-buzzer"onchange="updateBuzzerStatus(this.checked)">
+                    <span class="slider">
+                        <span class = "slider-toggle"></span>
+                    </span>  
+                </label>
+                <h2>BUZZER Status: <span id="buzzer-status">OFF</span></h2>
+        </div>
+        
+    </body>
+</html>

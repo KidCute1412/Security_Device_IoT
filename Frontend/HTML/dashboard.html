@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IoT Skills Final Project</title>
+    <link rel="stylesheet" href="../CSS/main-content.css">
+
+    <link rel="stylesheet" href="../CSS/side-bar.css">
+</head>
+
+<body>
+    <div class = "side-bar">
+        <button class = 'side-bar-button' onclick = "loadPage('home')">Home</button>
+        <button class = 'side-bar-button' onclick = "loadPage('data')">Data</button>
+        <button class = 'side-bar-button' onclick = "loadPage('settings')">Settings</button>
+        <button class = 'side-bar-button' onclick = "logout()">Log out</button>
+    </div>
+    <div id="main-content">
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <script src = "../JavaScript/dashboard.js"></script>
+    <script src = "../JavaScript/home.js"></script>
+    <script src = "../JavaScript/data.js"></script>
+    <script src = "../JavaScript/settings.js"></script>
+</body>
+</html>
