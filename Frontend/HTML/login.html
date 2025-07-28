@@ -4,29 +4,40 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Page</title>
-    <link rel="stylesheet" href="../CSS/login.css">
+    <link rel="stylesheet" href="/Frontend/CSS/login.css">
 </head>
 <body>
-    <div class = "login-container">
+    <div class = "login-form">
         <div class = "login-grid">
             <input type="text" class="login-input" placeholder="Username" id = "account"><br>
         
             <div class ="password-container">
                 <input type="password" class="login-input" placeholder = "Password" id = "password">
-                <span class = "toggle-password" onclick = "togglePasswordVisibility()"></span>
+                <span class = "toggle-password" id = "toggle-password" onclick = "togglePasswordVisibility()"></span>
+            </div>
         </div>
-
-
-        </div>
-        
-
-        
         <div class = "login-buttons">
             <button onclick ="login()" class = "button">Login</button>
-            <button onclick ="register()" class = "button">Register</button>
-        </div>
-        
+            <button onclick ="sign_up()" class = "button">Sign up</button>
+        </div>      
     </div>
-    <script src = "../JavaScript/login.js"></script>
+
+
+    <div class = "sign-up-form">
+        <div class = "login-grid">
+            <input type="text" class="login-input" placeholder="Username" id = "account-register"><br>
+            <input type="text" class="login-input" placeholder="Phone number" id = "phone-number"><br>
+            <div class ="password-container">
+                <input type="password" class="login-input" placeholder = "Password" id = "password-register">
+                <span class = "toggle-password" id = "toggle-password-register" onclick = "togglePasswordVisibilityRegister()"></span>
+            </div>
+        </div>
+        <div class = "login-buttons">
+            <button onclick ="return_login()" class = "button">Return</button>
+            <button onclick ="sign_up_submit()" class = "button">Sign up</button>
+        </div>
+
+    </div>
+    <script type="module" src="/Frontend/JavaScript/login.js"></script>
 </body>
 </html>

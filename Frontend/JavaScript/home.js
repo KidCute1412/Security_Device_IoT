@@ -1,3 +1,35 @@
+let reedSensorValue = false; // Simulated initial state
+let pirSensorValue = false; // Simulated initial state
+let vibrationSensorValue = false; // Simulated initial state
+
+
+
+
+
+
+function getDataCurrentSensor(){
+  // From API
+  fetch("http://localhost:5000/api/sensor_status")
+    .then(response => response.json())
+    .then(data => {
+      // Update Reed Sensor
+      updateReedSensor(data.reed_sensor);
+      
+      // Update PIR Sensor
+      updatePirSensor(data.pir_sensor);
+      
+      // Update Vibration Sensor
+      updateVibrationSensor(data.vibration_sensor);
+    });
+}
+
+// Update the sensors every 5 seconds
+setInterval(() => {
+  getDataCurrentSensor();
+}, 5000); // Update every 5 seconds
+
+
+
 // REED SENSOR
 function updateReedSensor(isOpen) {
   const img = document.getElementById("reed-status-icon");
@@ -12,11 +44,11 @@ function updateReedSensor(isOpen) {
   }
 }
 
-let reedSensorValue = false; // Simulated initial state
-setInterval(() => {
-  reedSensorValue = !reedSensorValue; // Toggle state for simulation
-  updateReedSensor(reedSensorValue);
-}, 5000); // Update every 5 seconds
+
+// setInterval(() => {
+//   reedSensorValue = !reedSensorValue; // Toggle state for simulation
+//   updateReedSensor(reedSensorValue);
+// }, 5000); // Update every 5 seconds
 
 // PIR SENSOR
 function updatePirSensor(isMotionDetected) {
@@ -31,11 +63,11 @@ function updatePirSensor(isMotionDetected) {
     text.textContent = "✅ Không có chuyển động";
   }
 }
-let pirSensorValue = false; // Simulated initial state
-setInterval(() => {
-  pirSensorValue = !pirSensorValue; // Toggle state for simulation
-  updatePirSensor(pirSensorValue);
-}, 5000); // Update every 5 seconds
+
+// setInterval(() => {
+//   pirSensorValue = !pirSensorValue; // Toggle state for simulation
+//   updatePirSensor(pirSensorValue);
+// }, 5000); // Update every 5 seconds
 
 // VIBRATION SENSOR
 function updateVibrationSensor(isVibrationDetected) {
@@ -50,12 +82,12 @@ function updateVibrationSensor(isVibrationDetected) {
     text.textContent = "✅ Không có rung động";
   }
 }
-let vibrationSensorValue = false; // Simulated initial state
-setInterval(() => {
-  vibrationSensorValue = !vibrationSensorValue; // Toggle state for simulation
-  updateVibrationSensor(vibrationSensorValue);
-}
-, 5000); // Update every 5 seconds
+
+// setInterval(() => {
+//   vibrationSensorValue = !vibrationSensorValue; // Toggle state for simulation
+//   updateVibrationSensor(vibrationSensorValue);
+// }
+// , 5000); // Update every 5 seconds
 
 
 
