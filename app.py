@@ -2,7 +2,8 @@ from flask import Flask, redirect, request, jsonify, url_for, send_from_director
 from flask_cors import CORS
 import random
 import Backend.account as account
-
+import Backend.gemini_api as gemini_api
+import Backend.filter_data as filter_data
 app = Flask(__name__)
 CORS(app) # Enable CORS for all routes
 
@@ -43,6 +44,34 @@ def login_process():
 @app.route('/api/sign-up', methods=['POST'])
 def sign_up():
    return account.sign_up()
+
+
+
+
+# API for password analysis (demo AI)
+@app.route('/api/analyze_password_strength', methods=['GET'])
+
+def analyze_password_strength():
+   return gemini_api.analyze_password_strength()
+
+# API for get date filter
+# chart 1
+@app.route('/api/get_date_chart1', methods=['POST'])
+def get_date_chart1():
+    return filter_data.get_date_chart1()
+# chart 2
+@app.route('/api/get_date_chart2', methods=['POST'])
+def get_date_chart2():
+    return filter_data.get_date_chart2()
+
+# API for generative AI response
+@app.route('/api/generative_ai_response/chart1', methods=['POST'])
+def ai_response_chart1():
+    return filter_data.ai_response_chart1()
+@app.route('/api/generative_ai_response/chart2', methods=['POST'])
+def ai_response_chart2():
+    return filter_data.ai_response_chart2()
+
 
 
 if __name__ == '__main__':

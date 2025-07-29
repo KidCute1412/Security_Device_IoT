@@ -2,7 +2,7 @@
     display: flex;
     position: relative;
     margin-left: 200px;
-    background-color:rgb(230, 181, 235);
+    background-color:rgb(189, 208, 239);
     flex-direction: column;
 }
 
@@ -12,158 +12,24 @@ h1{
     color: #f9f9f9;
     width: 80%;
     margin: 10px auto;
-    background-color:rgb(89, 226, 181)
-}
-
-/* Home page */
-.device-status{
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 20px;
-    padding: 20px;
-    background-color: #92b9ec;
-    
-}
-
-.status{
-    background-color:aquamarine;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding-top: 20px;
-    padding-bottom: 20px;
+    font-size: 50px;
+    background-color:rgb(67, 67, 208);
+    padding: 10px;
     border-radius: 50px;
-    border-width: 1px;
-    border-style: solid;
-    border-color: #f9f9f9;
+    margin: 30px auto;
+    box-shadow: 0 4px 8px rgba(228, 65, 226, 0.814);
 
 }
-.status p{
-    font-size: 20px;
-    margin: 10px 0;
-}
-.status-icon{
-    width: 100px;
-    height: 100px;
-
-}
-
-.conclusion{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    margin-top: 20px;
-    padding: 20px;
-    background-color: #f9f9f9;
-    border-radius: 10px;
-    font-size: 20px;
-}
-
-/* Data page */
-.chart{
-    width: 750px;
-    display: flex;
-    margin : 0 auto;
-    margin-top: 20px;
-    background-color: #f9f9f9;
-    border-radius: 30px;
-
-}
-
-/* Settings page */
-.settings-container{
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    column-gap: 30px;
-    row-gap: 40px;
-    padding: 20px;
-    
-
-}
-.switch-container{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    background-color: #ca73ed;
-    padding: 20px;
-    border-radius: 10px;
-    height: 200px;
-    transition: 0.3s;
-}
-.switch-container:hover{
-    transform: scale(1.05);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-.switch-container h2{
-    color: #f9f9f9;
-}
-
-.switch-container h2 span{
-    color: black;
-    font-weight: bold;
-}
-
-/* SWITCH BUTTON */
-.switch {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    width: 100px;
-    height: 50px;
-    /* background-color: #f9f9f9; */
-
-}
-
-.switch input {
-    background-color:aquamarine;
-    opacity: 0;
-    width: 0;
-    height: 0;
-}
-.switch input:hover {
-    cursor: pointer;
-
-}
-
-.slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: #e216ab;
-    transition: 0.4s;
+h1::after{
+    content: "";
+    display: block;
+    width: 50%;
+    height: 5px;
+    background-color: #dedede;
+    margin: 10px auto;
     border-radius: 50px;
-    transition: 0.3s;
-}
-.slider:hover {
-    transform: scale(1.05);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 
-.slider > .slider-toggle{
-    position: absolute;
-    background-color:rgb(246, 214, 240);
-    top: 0;
-    left: 0;
-    right: 50px;
-    bottom: 0;
-    transition: 0.4s;
-    border-radius: 50%;
 
-}
 
-input:checked + .slider {
-    background-color: #0094CE; /* màu xanh như Node-RED */
-}
-
-input:checked + .slider > .slider-toggle {
-    transform: translateX(50px);
-    background-color: #ffffff; /* màu trắng khi bật */
-}
-
-/* DONE SWITCH */

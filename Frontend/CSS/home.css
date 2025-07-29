@@ -1,0 +1,51 @@
+/* Home page */
+.device-status{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    margin-top: 100px;
+    gap: 20px;
+    padding: 20px;
+    /* background-color: #92b9ec; */
+    
+}
+
+.status{
+    background-color:aquamarine;
+    width: 45%;
+    /* height: 300px; */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 50px;
+    padding-bottom: 55px;
+    border-radius: 50px;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #f9f9f9;
+
+}
+.status p{
+    font-size: 20px;
+    margin: 10px 0;
+}
+.status-icon{
+    width: 100px;
+    height: 100px;
+
+}
+
+.conclusion{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    width: 70%;
+    margin: 0 auto;
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    font-size: 20px;
+}

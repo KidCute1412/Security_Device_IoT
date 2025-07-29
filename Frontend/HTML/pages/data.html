@@ -2,7 +2,58 @@
 <html>
     <body>
         <h1>Welcome to Data page</h1>
+
+        <!-- chart 1 -->
+        <h2 class = "title-chart">Biểu đồ số lần cảnh báo trong các ngày</h2>
+        <div class = "date-container">
+            <div class = "date-block">
+                <label for="start-date-chart" class = "date-label">Select Start Date:</label>
+                <input type="date" id="start-date-chart" class="date-input">
+            </div>
+            <div class = "date-block">
+                <label for="end-date-chart" class = "date-label">Select End Date:</label>
+                <input type="date" id="end-date-chart" class="date-input">
+            </div>
+            <button id="update-date-chart1" class="data-button" onclick = "updateChart1()">Filter</button>
+
+        </div>
         <canvas id ="times-chart" class = "chart"></canvas>
+        <!-- AI chart 1 -->
+        <div class = "ai-response-container">
+            <div class = "ai-button-container">
+                <button class = "button-genai" id = "genai-chart1" onclick = "aiResponseChart1()">Analyze by AI</button>
+            </div>
+            <div class = "ai-response">
+                <img src="assets/ai-icon.png" alt="AI Response" class="ai-icon">
+                <p class="ai-response-text" id = "genai-text-chart1">AI will analyze data and response here...</p>
+            </div>
+
+        </div>
+
+        <!-- chart 2 -->
+        <h2 class = "title-chart">Biểu đồ chi tiết cảnh báo trong 1 ngày</h2>
+        <div class = "date-container">
+
+            <div class = "date-block">
+                <label for="date-chart" class = "date-label">Select End Date:</label>
+                <input type="date" id="date-chart" class="date-input">
+            </div>
+            <button id="update-date-chart2" class="data-button" onclick = "updateChart2()">Filter</button>
+
+        </div>
         <canvas id="trend-chart" class="chart"></canvas>
+
+        <!-- AI chart 2 -->
+        <div class = "ai-response-container">
+            <div class = "ai-button-container">
+                <button class = "button-genai" id = "genai-chart2" onclick = "aiResponseChart2()">Analyze by AI</button>
+            </div>
+            <div class = "ai-response">
+                <img src="assets/ai-icon.png" alt="AI Response" class="ai-icon">
+                <p class="ai-response-text" id = "genai-text-chart2">AI will analyze data and response here...</p>
+            </div>
+
+        </div>
+
     </body>
 </html>

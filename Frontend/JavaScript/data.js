@@ -143,12 +143,149 @@ setInterval(() => {
     trendChart.update();
 }, 5000); // Update every 5 seconds
 
+// DATE FILTER
 
+// Today's date
+const today = new Date().toISOString().split('T')[0];
+function setupDefaultDate(){
+    // For chart 1, end date is today, start day is 7 days ago
+    const endDate = today;
+    const startDate = new Date();
+    startDate.setDate(startDate.getDate() - 7);
+    const formattedStartDate = startDate.toISOString().split('T')[0];
+    document.getElementById("start-date-chart").value = formattedStartDate;
+    document.getElementById("end-date-chart").value = endDate;
+    // For chart 2, only today
+    document.getElementById("date-chart").value = today;
+}
+
+// Update chart 1 with selected date range
+function updateChart1() {
+    const start = document.getElementById("start-date-chart").value;
+    const end = document.getElementById("end-date-chart").value;
+    if (!start || !end) {
+        alert("Vui lòng chọn ngày bắt đầu và kết thúc.");
+        return;
+    }
+    const startDate = new Date(start);
+    const endDate = new Date(end);
+    const diffTime = endDate - startDate;
+    if (diffTime < 0) {
+        alert("Ngày kết thúc không được trước ngày bắt đầu.");
+        return;
+    }
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    if (diffDays > 7) {
+        alert("Khoảng thời gian không được vượt quá 7 ngày.");
+        return;
+    }
+    // Fetch data to server
+    fetch("http://localhost:5000/api/get_date_chart1", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            start_date: start,
+            end_date: end
+        })
+    }).then(response => {
+        return response.json();
+    }
+    ).then(data => {
+        if (data.status === "OKE") {
+            console.log("Data for chart 1 updated successfully.");
+        }
+        else {
+            alert("Lỗi khi cập nhật dữ liệu biểu đồ 1: " + data.message);
+        }
+    });
+}
+
+// Update chart 2 with selected date
+function updateChart2() {
+    const date = document.getElementById("date-chart").value;
+    if (!date) {
+        alert("Vui lòng chọn ngày.");
+        return;
+    }
+    const selectedDate = new Date(date);
+    const todayDate = new Date();
+    if (selectedDate > todayDate) {
+        alert("Ngày chọn không được sau ngày hôm nay.");
+        return;
+    }
+    // Fetch data to server
+    fetch("http://localhost:5000/api/get_date_chart2", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            date: date
+        })
+    }).then(response => {
+        return response.json();
+    }
+    ).then(data => {
+        if (data.status === "OKE") {
+            console.log("Data for chart 2 updated successfully.");
+        }
+        else {
+            alert("Lỗi khi cập nhật dữ liệu biểu đồ 2: " + data.message);
+        }
+    });
+}
+
+// AI simulated responsive
+function aiResponseChart1(){
+    fetch("/api/generative_ai_response/chart1", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById("genai-text-chart1").innerText = data.analysis;
+    })
+    .catch(error => {
+        console.error("Error fetching AI response for chart 1:", error);
+        document.getElementById("genai-text-chart1").innerText = "Có lỗi xảy ra khi lấy phản hồi AI.";
+    });
+
+}
+function aiResponseChart2(){
+    fetch("/api/generative_ai_response/chart2", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById("genai-text-chart2").innerText = data.analysis;
+    })
+    .catch(error => {
+        console.error("Error fetching AI response for chart 2:", error);
+        document.getElementById("genai-text-chart2").innerText = "Có lỗi xảy ra khi lấy phản hồi AI.";
+    });
+}
 
 
 // INIT DATA PAGE
 function initDataPage() {
     loadTimesChart();
     loadTrendChart();
-
+    setupDefaultDate();
 }
+
+
+
+
+
+
+
+
+
+// AI responsive
