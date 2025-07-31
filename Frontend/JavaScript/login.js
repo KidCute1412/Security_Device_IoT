@@ -20,6 +20,12 @@ function login(){
         })
     })
     .then(response => {
+        if (!response.ok) {
+        // Có thể là 401 hoặc lỗi khác
+        return response.text().then(text => {
+            throw new Error(`Lỗi server: ${response.status} - ${text}`);
+        });
+        }
         return response.json();
     })
     .then(data => {

@@ -26,7 +26,7 @@ def get_user_info(username):
     if user:
         return {
             "username": user["username"],
-            "phone_number": user["phonenumber"],
+            "phone_number": user["phone_number"],
             "password": user["password"]    
         }
     else:
