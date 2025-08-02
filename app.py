@@ -2,6 +2,27 @@ from flask import Flask, redirect, request, jsonify, url_for, send_from_director
 from flask_cors import CORS
 import random
 import Backend.account as account
+import paho.mqtt.client as mqtt
+
+# Biến toàn cục lưu dữ liệu sensor
+mqtt_data = {
+    "reed_sensor": False,
+    "pir_sensor": False,
+    "vibration_sensor": False
+}
+
+def on_message(client, userdata, msg):
+    print(f"[DEBUG] Callback from client id: {id(client)}")
+    topic = msg.topic
+    payload = msg.payload.decode()
+    
+    print(f"[MQTT] Topic: {topic}, Payload: {payload}") 
+
+    
+
+# MQTT setup
+mqtt_client = mqtt.Client()
+mqtt_client.on_message = on_message
 
 app = Flask(__name__)
 CORS(app) # Enable CORS for all routes
@@ -46,4 +67,9 @@ def sign_up():
 
 
 if __name__ == '__main__':
-   app.run(debug = True)
+    # Chỉ chạy MQTT client ở process chính
+    mqtt_client.connect("broker.hivemq.com", 1883, 60)
+    mqtt_client.subscribe("/data/pir_sensor")
+    mqtt_client.loop_start()
+
+    app.run(debug=True, use_reloader=False) 
