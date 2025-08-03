@@ -4,6 +4,7 @@ import random
 import Backend.account as account
 import Backend.gemini_api as gemini_api
 import Backend.filter_data as filter_data
+import Backend.chatbot as chatbot
 app = Flask(__name__)
 CORS(app) # Enable CORS for all routes
 
@@ -40,6 +41,7 @@ def get_status():
 def login_process():
    return account.login()
 
+
 # API for register
 @app.route('/api/sign-up', methods=['POST'])
 def sign_up():
@@ -73,6 +75,10 @@ def ai_response_chart2():
     return filter_data.ai_response_chart2()
 
 
+# API for chatbot
+@app.route('/api/chat-bot', methods=['POST'])
+def chatbot_response():
+    return chatbot.chatbot_response()
 
 if __name__ == '__main__':
    app.run(debug = True)

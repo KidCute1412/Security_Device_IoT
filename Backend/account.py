@@ -1,10 +1,8 @@
+import email
 from flask import  request, jsonify
 from Backend.cloud_database import user_account_collection 
-
-
-# Simulate account
-
-
+import bcrypt
+import Backend.global_vars as global_vars
 
 
 
@@ -14,23 +12,47 @@ def check_login():
     data = request.get_json()
     username = data.get('username')
     password = data.get('password')
+    # Hash the password before checking
+    hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+    # Check if the username and hashed password match in the database
+    if not username or not password:
+        return False
+    if not user_account_collection:
+        print("User account collection is not initialized.")
+        return False
+    if not user_account_collection.find_one({"username": username}):
+        print(f"Username {username} does not exist.")
+        return False
+    
     print(f"Received login request with username: {username} and password: {password}")
-    user = user_account_collection.find_one({"username": username, "password": password})
-    if user:
+    user = user_account_collection.find_one({"username": username})
+    #Check password
+    is_correct_password = False
+    if bcrypt.checkpw(password.encode('utf-8'), user['password'].encode('utf-8')):
+        print("Password matches.")
+        is_correct_password = True
+    else:
+        print("Password does not match.")
+        return False
+    
+    print(f"User found: {user}")
+    if user and is_correct_password:
         return True
     else:
         return False
 
 def get_user_info(username):
     user = user_account_collection.find_one({"username": username})
+
     if user:
         return {
             "username": user["username"],
-            "phone_number": user["phone_number"],
-            "password": user["password"]    
+            # "password": user["password"],
+            "email": user["email"]
         }
     else:
         return None    
+    
 def login():
     if request.method == 'POST':
         if check_login():
@@ -38,17 +60,31 @@ def login():
             if not user_info:
                 return jsonify({"status": "ERROR", "message": "User not found"}), 404
             print(f"User info: {user_info}")
-            user_name, phone_number, password = user_info["username"], user_info["phone_number"], user_info["password"]
+            user_name = user_info["username"]
+            email = user_info["email"]
+
+            # Update global variables
+            global_vars.global_username = user_name
+            global_vars.global_email = email
+            global_vars.update_global_id()  # Update global ID based on username
+            print(f"Global username: {global_vars.global_username}")
+            print(f"Global email: {global_vars.global_email}")
+            print(f"Global id: {global_vars.global_id}")
+
             return jsonify({"status": "OKE", "message": "Login successful", 
-                            "username": user_name, "phone_number": phone_number,
-                            "password": password}), 200
+                            "username": user_name, "email": email}), 200
         else:
-            return jsonify({"status": "ERROR", "message": "Invalid username or password"}), 401
+            return jsonify({"status": "ERROR", "message": "Invalid username or password"}), 200
     else:
         return jsonify({"status": "ERROR", "message": "Method not allowed"}), 405    
 
 
 # Sign-up API
+
+def is_valid_email(email):
+    # Check if the email is valid (simple regex check)
+    import re
+    return re.match(r"[^@]+@[^@]+\.[^@]+", email) is not None
 
 def normalize_phone_number(phone):
     # Normalize phone number to ensure it has 10 digits
@@ -80,20 +116,23 @@ def sign_up():
     data = request.get_json()
     username = data.get('username')
     password = data.get('password')
-    phone = data.get('phone_number')
+    email = data.get('email')
+    # phone = data.get('phone_number')
     # Normalize inputs
     username = normalize_username(username)
-    phone = normalize_phone_number(phone)
-    print(f"Received sign-up request with username: {username} and password: {password}"
-          and f" phone: {phone}")
-    # Validate inputs
-    if not check_existed_username(username) and valid_password(password) and len(phone) == 10 and len(username) != 0:
+    print(f"Received sign-up request with username: {username} and password: {password} and email: {email}")
+    # Vali date inputs
+    if not check_existed_username(username) and valid_password(password) and len(username) != 0 and is_valid_email(email):
+
+        # Hash the password before storing it
+  
+        hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
 
         # Insert new user into the database
         user_account_collection.insert_one({
             "username": username,
-            "password": password,
-            "phone_number": phone
+            "password": hashed_password.decode('utf-8'),
+            "email": email
         })
         # Return success response to frontend
         return jsonify({"status": "OKE", "message": "Sign-up successful"}), 201
@@ -103,8 +142,8 @@ def sign_up():
             return jsonify({"status": "ERROR", "message": "Username is empty"}), 400
         if not valid_password(password):
             return jsonify({"status": "ERROR", "message": "Password is not valid"}), 400
-        if len(phone) != 10:
-            return jsonify({"status": "ERROR", "message": "Phone number is not valid"}), 400
+        if not is_valid_email(email):
+            return jsonify({"status": "ERROR", "message": "Email is not valid"}), 400
         if check_existed_username(username):
             return jsonify({"status": "ERROR", "message": "Username already exists"}), 400
         

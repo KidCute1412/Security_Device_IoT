@@ -31,10 +31,6 @@ function login(){
     .then(data => {
         if (data.status === "OKE") {
             alert("Đăng nhập thành công!");
-            // Save user data to globals
-            globals.user_name = data.username;
-            globals.phone_number = data.phone_number;
-            globals.password = data.password;
             window.location.href = "../HTML/dashboard.html";
         } else {
             alert("Tài khoản hoặc mật khẩu không đúng. Vui lòng thử lại.");
@@ -102,9 +98,10 @@ window.return_login = return_login;
 function sign_up_submit() {
     const accountRegister = document.getElementById("account-register").value;
     const passwordRegister = document.getElementById("password-register").value;
-    const phoneNumber = document.getElementById("phone-number").value;
+    // const phoneNumber = document.getElementById("phone-number").value;
+    const emailRegister = document.getElementById("email-register").value;
     
-    if (!accountRegister || !passwordRegister || !phoneNumber) {
+    if (!accountRegister || !passwordRegister || !emailRegister) {
         alert("Vui lòng nhập đầy đủ thông tin.");
         return;
     }
@@ -116,7 +113,7 @@ function sign_up_submit() {
         },
         body: JSON.stringify({
             username: accountRegister,
-            phone_number: phoneNumber,
+            email: emailRegister,
             password: passwordRegister
         })
     })
@@ -139,6 +136,9 @@ function sign_up_submit() {
             }
             if (data.message === "Username already exists") {
                 alert("Tài khoản đã tồn tại. Vui lòng chọn tài khoản khác.");
+            }
+            if (data.message === "Email is not valid") {
+                alert("Email không hợp lệ. Vui lòng nhập lại.");
             }
         }
     })

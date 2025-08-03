@@ -14,6 +14,8 @@ db = client["security_device"]
 
 # This is COLLECTIONS (equivalent to table in SQL) for the security device
 user_account_collection = db["user_account"]
+sensor_data_collection = db["sensor_data"]
+alert_collection = db["alert"]
 
 
 # Some constraints

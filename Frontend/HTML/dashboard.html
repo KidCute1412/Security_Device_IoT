@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="../CSS/data.css">
     <link rel="stylesheet" href="../CSS/settings.css">
     <link rel="stylesheet" href="../CSS/side-bar.css">
+    <link rel="stylesheet" href="../CSS/chat-bot.css">
 </head>
 
 <body>
@@ -22,10 +23,30 @@
     </div>
 
 
+    <!-- chat bot  -->
+    <button class = "chat-bot-button" onclick = "toggleChatBot()"></button>
+    <div class = "chat-bot" id = "chat-bot">
+        <div class = "chat-bot-header">
+            <span>Chat Bot</span>
+            <button class = "close-chat-bot" onclick = "toggleChatBot()">X</button>
+        </div>
+        <div class = "chat-bot-content" id = "chat-bot-content">
+            <div class = "chat-bot-message">
+                <span class = "bot-message">Hello! How can I assist you today?</span>
+            </div>
+            <div class = "chat-bot-input">
+                <input type="text" id="user-input-chatbot" class = "user-input-chatbot" placeholder="Type your message here">
+                <button class = "send-message-button" onclick="sendMessage()">Send</button>
+            </div>
+        </div>
+    </div>
+
+
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
     <script src = "../JavaScript/dashboard.js"></script>
     <script src = "../JavaScript/home.js"></script>
     <script src = "../JavaScript/data.js"></script>
     <script src = "../JavaScript/settings.js"></script>
+    <script src = "../JavaScript/chatbot.js"></script>
 </body>
 </html>
