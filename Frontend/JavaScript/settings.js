@@ -67,6 +67,31 @@ function updateBuzzerStatus(checkbox) {
 
 
 
+// LCD status
+function initLCDStatus(){
+    // LOAD FROM ESP32
+    const status = "Chống Trộm"; // Simulated initial state
+    updateLCD(status);
+}
+function updateLCD(value) {
+    const lcdStatus = document.getElementById("lcd-status");
+    const lcdSelect = document.getElementById("lcd-select");
+    
+    if (value === "1") {
+        lcdStatus.textContent = "Chống Trộm Mode";
+        lcdStatus.style.color = "Red";
+        lcdSelect.value = "1"; // Update select state
+        lcdSelect.style.backgroundColor = "#e96e8f"; // Change select color to match
+    } else if (value === "2") {
+        lcdStatus.textContent = "Gia Chủ Mode";
+        lcdStatus.style.color = "blue";
+        lcdSelect.value = "2"; // Update select state
+        lcdSelect.style.backgroundColor = "#6e8fe9"; // Change select color to match
+    }
+}
+
+
+
 
 
 

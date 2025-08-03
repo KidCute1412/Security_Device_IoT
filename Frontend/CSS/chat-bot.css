@@ -13,7 +13,14 @@
     height: 80px;
     font-size: 24px;
     box-shadow: 0 4px 8px rgba(85, 51, 237, 0.584);
+    transition: 0.3s;
     cursor: pointer;
+}
+
+.chat-bot-button:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 12px rgba(241, 22, 241, 0.584);
+    
 }
 
 .chat-bot{
@@ -26,8 +33,10 @@
     border: 1px solid #ccc;
     border-radius: 50px 50px 0px 50px;
     box-shadow: 0 4px 8px rgba(85, 51, 237, 0.584);
-    /* display: none; Initially hidden */
+    display: none; 
 }
+
+
 .chat-bot-header{
     
     background-color: #afaef0;
@@ -106,12 +115,12 @@
     grid-template-columns: 80% 20%;
     position: absolute;
     height: 50px;
-    bottom: -75px;
+    bottom: -85px;
     left: 0px;
     width: 90%;
     padding: 10px;
     border: none;
-    border-radius: 30px 30px 0px 30px;
+    border-radius: 30px 0px 30px 30px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     margin-top: 10px;
     background-color:#8664e3;

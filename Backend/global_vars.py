@@ -4,6 +4,11 @@ global_username = None
 global_email = None
 global_id = None
 
+current_pir_sensor = None
+current_vibration_sensor = None
+current_led_status = None
+current_buzzer_status = None
+current_lcd_status = None
 
 
 

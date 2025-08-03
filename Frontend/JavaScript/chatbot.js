@@ -1,6 +1,6 @@
 function toggleChatBot() {
     const chatbot = document.getElementById('chat-bot');
-    if (chatbot.style.display === 'none') {
+    if (chatbot.style.display === 'none' || chatbot.style.display === '') {
         chatbot.style.display = 'block';
     } else {
         chatbot.style.display = 'none';

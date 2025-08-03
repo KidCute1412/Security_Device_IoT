@@ -13,16 +13,6 @@
                 <h2>LED Status: <span id="led-status">OFF</span></h2>
             </div>
             <div class = "switch-container">
-                <h2>RELAY</h2>
-                <label class="switch">
-                    <input type="checkbox" id = "checkbox-relay" onchange="updateRelayStatus(this.checked)">
-                    <span class="slider">
-                        <span class = "slider-toggle"></span>
-                    </span>  
-                </label>
-                <h2>RELAY Status: <span id="relay-status">OFF</span></h2>
-            </div>
-            <div class = "switch-container">
                 <h2>BUZZER</h2>
                 <label class="switch">
                     <input type="checkbox" id = "checkbox-buzzer"onchange="updateBuzzerStatus(this.checked)">
@@ -31,6 +21,24 @@
                     </span>  
                 </label>
                 <h2>BUZZER Status: <span id="buzzer-status">OFF</span></h2>
+            </div>
+            <div class = "switch-container">
+                <h2>LCD Status</h2>
+                <select id="lcd-select" class = "lcd-select" onchange="updateLCD(this.value)">
+                    <option value = "1" >Chống Trộm</option>
+                    <option value="2">Gia chủ</option>
+                </select>
+                <h2>LCD: <span id="lcd-status">Chống Trộm Mode</span></h2>
+
+            </div>
+            <div class = "switch-container">
+                <h2>Wifi Manager</h2>
+                <input type="text" id="wifi-ssid" class = "wifi-input" placeholder="Enter WiFi SSID">
+                <input type="password" id="wifi-password" class = "wifi-input" placeholder="Enter WiFi Password">
+                <input type="text" id="wifi-ip" class = "wifi-input" placeholder="Enter Device IP Address">
+                <button id="connect-wifi" class = "wifi-button" onclick="connectWifi()">Connect</button>
+
+            </div>
         </div>
         
     </body>
