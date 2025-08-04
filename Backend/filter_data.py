@@ -32,10 +32,17 @@ def get_date_chart2():
 
 # Generative AI response for chart 1
 def ai_response_chart1():
+    data_message = request.get_json()
+    labels, data = data_message.get("labels"), data_message.get("data")
     start_date = start_date_chart1
     end_date = end_date_chart1
     prompt = f"""    Dưới đây là khoảng thời gian: từ {start_date} đến {end_date}. 
-    Tạm thời bạn hãy in ra khoảng thời gian này và kiểu chào buổi sáng vui vẻ, tầm 30 từ."""
+    Đây là dữ liệu các ngày: {labels} và dữ liệu tương ứng: {data}.
+    Nếu dữ liệu các ngày không có thì trả về "Không có dữ liệu".
+    Nếu dữ liệu các ngày  có thì hãy phân tích và đưa ra nhận xét, xu hướng của dữ liệu này. 
+    Biết đây là dữ liệu số báo động chống trộm trong các ngày tương ứng.
+    Trả lời khoảng 200 từ. (tất cả là text tiếng Việt)
+    """
     response = model.generate_content(prompt)
     analysis = response.text.strip()
     return jsonify({
@@ -46,9 +53,15 @@ def ai_response_chart1():
 
 # Generative AI response for chart 2
 def ai_response_chart2():
+    data_message = request.get_json()
+    labels, data = data_message.get("labels"), data_message.get("data")
     date = date_chart2
     prompt = f"""    Dưới đây là ngày: {date}. 
-    Tạm thời bạn hãy in ra ngày này và kiểu chào buổi sáng vui vẻ, tầm 30 từ."""
+    Đây là dữ liệu giờ trong ngày: {labels} và dữ liệu tương ứng: {data}.
+    Nếu dữ liệu giờ không có thì trả về "Không có dữ liệu".
+    Nếu dữ liệu giờ có thì hãy phân tích và đưa ra nhận xét, xu hướng của dữ liệu này. 
+    Biết đây là dữ liệu số báo động chống trộm theo các giờ trong ngày đang xét.
+    Trả lời khoảng 200 từ.(tất cả là text tiếng Việt)"""
     response = model.generate_content(prompt)
     analysis = response.text.strip()
     return jsonify({

@@ -45,8 +45,13 @@ def handle_alert_history(list_days, list_devices):
     if len(list_devices) == 0:
         return alert_text
     
+    # print("Start:", start_date)
+    # print("End:", end_date)
 
+    # doc = sensor_data_collection.find_one({"sensor_type": "pir"})
+    # print("Timestamp in doc:", doc)
     if "pir" in list_devices:
+        print (gv.global_id)
         pir_sensors = sensor_data_collection.find({"user_id": gv.global_id,
                                                     "sensor_type": "pir", 
                                                    "timestamp": {"$gte": start_date, 
@@ -59,6 +64,7 @@ def handle_alert_history(list_days, list_devices):
         vibration_sensors = sensor_data_collection.find({"user_id": gv.global_id, "sensor_type": "vibration", 
                                                         "timestamp": {"$gte": start_date, 
                                                                       "$lt": end_date}})
+        
         if not vibration_sensors:
             vibration_sensor_text = "Không có dữ liệu cảm biến rung trong ngày này."
         else:
@@ -186,25 +192,25 @@ def today():
 def handle_question_type(type, list_days, list_devices):
     if type == "alert_history":
         #simulate:
-        return f"Đây là lịch sử cảnh báo trong ngày {list_days[0]} cho các thiết bị {', '.join(list_devices)}"
+        # return f"Đây là lịch sử cảnh báo trong ngày {list_days[0]} cho các thiết bị {', '.join(list_devices)}"
         return handle_alert_history(list_days, list_devices)
     elif type == "lastest_alert":
         # simulate:
         if len(list_days) == 0:
             list_days.append(today())
-        return f"Đây là cảnh báo mới nhất trong ngày {list_days[0]} cho các thiết bị {', '.join(list_devices)}"
+        # return f"Đây là cảnh báo mới nhất trong ngày {list_days[0]} cho các thiết bị {', '.join(list_devices)}"
         return handle_lastest_alert(list_days, list_devices)
     elif type == "compare_days":
         # simulate:
-        return f"Đây là so sánh giữa ngày {list_days[0]} và {list_days[1]} cho các thiết bị {', '.join(list_devices)}"
+        # return f"Đây là so sánh giữa ngày {list_days[0]} và {list_days[1]} cho các thiết bị {', '.join(list_devices)}"
         return handle_compare_days(list_days, list_devices)
     elif type == "device_info":
         # simulate:
-        return f"Đây là thông tin về các thiết bị {', '.join(list_devices)}"
+        # return f"Đây là thông tin về các thiết bị {', '.join(list_devices)}"
         return handle_device_info(list_devices)
     elif type == "realtime_status":
         # simulate:
-        return f"Đây là trạng thái hiện tại của các thiết bị {', '.join(list_devices)}"
+        # return f"Đây là trạng thái hiện tại của các thiết bị {', '.join(list_devices)}"
         return handle_realtime_status(list_devices)
     else:
         return "Không rõ loại câu hỏi"
@@ -237,7 +243,7 @@ def chatbot_response():
         {{
             "type": loại câu hỏi,
             "days": danh sách các ngày (dạng "YYYY-MM-DD"),
-            "devices": danh sách các thiết bị (ví dụ: ["pir", "vibration", "led", "buzzer", "lcd"])
+            "devices": danh sách các thiết bị (["pir", "vibration", "led", "buzzer", "lcd"] (Chỉ hiển thị những giá trị trong danh sách này))
         }}
         """
         chat_response = model.generate_content(prompt) # This is a string has JSON format

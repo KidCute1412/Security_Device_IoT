@@ -239,11 +239,20 @@ function updateChart2() {
 
 // AI simulated responsive
 function aiResponseChart1(){
+    // GET data chart 1
+    var labels = timesChart.data.labels;
+    var data = timesChart.data.datasets[0].data;
+
     fetch("/api/generative_ai_response/chart1", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
         }
+        ,
+        body: JSON.stringify({
+            labels: labels,
+            data: data
+        })
     })
     .then(response => response.json())
     .then(data => {
@@ -256,11 +265,20 @@ function aiResponseChart1(){
 
 }
 function aiResponseChart2(){
+    // GET data chart 2
+    var labels = trendChart.data.labels;
+    var data = trendChart.data.datasets[0].data;
     fetch("/api/generative_ai_response/chart2", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
         }
+        ,
+        body: JSON.stringify({
+            labels: labels,
+            data: data
+        })
+
     })
     .then(response => response.json())
     .then(data => {

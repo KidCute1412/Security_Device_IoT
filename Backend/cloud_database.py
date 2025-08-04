@@ -28,7 +28,7 @@ user_account_collection = db["user_account"]
 # {
 #    "_id"  : "ObjectId('...')",
 #    "user_id": "ObjectId('...')", (this is the id of user_account_collection)
-#    "sensor_type": "sensor1", (pir sensor, vibration sensor)
+#    "sensor_type": "sensor1", (pir, vibration)
 #    "timestamp": ISODate("2023-10-01T12:00:00Z) # format in ISODate
 # }
 sensor_data_collection = db["sensor_data"]
