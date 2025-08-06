@@ -1,6 +1,7 @@
 import paho.mqtt.client as mqtt
 import Backend.global_vars as glb
 import json
+from flask import request, jsonify
 
 
 
@@ -12,24 +13,6 @@ import json
 
 
 
-def setup_mqtt_subscription():
-    """
-    Subscribe to sensor data topic and start listening.
-    This should be called once during initialization.
-    """
-    try:
-        if hasattr(glb, 'global_username') and glb.global_username:
-            topic = f"/23127061_23127158_23127404/{glb.global_username}/received_data"
-            mqtt_client.subscribe(topic)
-            mqtt_client.loop_start()  # Start the MQTT client loop to process incoming messages
-            print(f"[MQTT] Subscribed to sensor data topic: {topic}")
-            return True
-        else:
-            print("[MQTT] Cannot subscribe: global_username not set")
-            return False
-    except Exception as e:
-        print(f"[MQTT] Error subscribing to sensor data: {e}")
-        return False
 
 def on_message(client, userdata, msg):
     """
@@ -56,6 +39,7 @@ mqtt_client.on_message = on_message  # Fixed: removed () - should be function re
 mqtt_client.connect("broker.hivemq.com", 1883, 60)
 
 
+### # 3MSSV/unification [username]
 
 def unification(username=None):
 
@@ -73,6 +57,7 @@ def unification(username=None):
         
         if result.rc == mqtt.MQTT_ERR_SUCCESS:
             print(f"[MQTT] Unification message sent successfully: {json_payload}")
+            glb.global_successfully_connected = True  # Set the flag to indicate successful connection
             return True
         else:
             print(f"[MQTT] Failed to send unification message. Error code: {result.rc}")
@@ -83,6 +68,26 @@ def unification(username=None):
         return False
 
 
+
+# 3MSSV/username/received_data [pir_sensor, vibration_sensor, led, buzzer, lcd]
+def setup_mqtt_subscription():
+    """
+    Subscribe to sensor data topic and start listening.
+    This should be called once during initialization.
+    """
+    try:
+        if hasattr(glb, 'global_username') and glb.global_username:
+            topic = f"/23127061_23127158_23127404/{glb.global_username}/received_data"
+            mqtt_client.subscribe(topic)
+            mqtt_client.loop_start()  # Start the MQTT client loop to process incoming messages
+            print(f"[MQTT] Subscribed to sensor data topic: {topic}")
+            return True
+        else:
+            print("[MQTT] Cannot subscribe: global_username not set")
+            return False
+    except Exception as e:
+        print(f"[MQTT] Error subscribing to sensor data: {e}")
+        return False
 
 
 
@@ -112,6 +117,38 @@ def process_received_data(json_data):
         print(f"[MQTT] Error processing sensor data: {e}")
 
     
+
+# 3MSSV/username/control_data [led, buzzer, lcd]
+
+def command_to_devices():
+    data = request.get_json()
+    if not data:
+        return jsonify({"status": "ERROR", "message": "No data provided"}), 400
+    
+    glb.current_led_status = data.get("led_status", glb.current_led_status)
+    glb.current_buzzer_status = data.get("buzzer_status", glb.current_buzzer_status)
+    glb.current_lcd_status = data.get("lcd_status", glb.current_lcd_status)
+
+    commands = {
+        "led_status": glb.current_led_status,
+        "buzzer_status": glb.current_buzzer_status,
+        "lcd_status": glb.current_lcd_status
+    }
+    try:
+        # Publish commands to MQTT
+        send_control_data(commands)
+        
+        return jsonify({
+            "status": "OKE",
+            "message": "Commands sent successfully",
+            "commands": commands
+        })
+    except Exception as e:
+        print(f"[MQTT] Error sending control data: {e}")
+        return jsonify({
+            "status": "ERROR",
+            "message": f"Error sending control data: {str(e)}"
+        }), 500
 
 def send_control_data(commands):
     """

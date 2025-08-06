@@ -4,7 +4,8 @@ import random
 import Backend.account as account
 import paho.mqtt.client as mqtt
 import Backend.mqtt_communication as mqtt
-import Backend.control as control
+import Backend.global_vars as glb
+
 # Biến toàn cục lưu dữ liệu sensor
 mqtt_data = {
     "reed_sensor": False,
@@ -34,10 +35,14 @@ def simulate_sensor():
 # Initial page
 @app.route('/')
 def first_page():
-   return redirect("/Frontend/HTML/login.html")
+   if not glb.global_successfully_connected:
+    return redirect("/Frontend/HTML/login.html")
+   else:
+    return redirect("/Frontend/HTML/dashboard.html")
 @app.route('/Frontend/<path:filename>')
 def serve_frontend(filename):
     return send_from_directory('Frontend', filename)
+
 
 
 
@@ -82,7 +87,7 @@ def get_all_status():
 
 @app.route('/api/control_devices', methods=['POST'])
 def control_devices():
-    return control.command_to_devices()
+    return mqtt.command_to_devices()
 
 # API for login
 @app.route('/api/login', methods=['POST'])
@@ -106,7 +111,25 @@ def login_process():
 
 
 
+# API for logout
+@app.route('/api/logout', methods=['POST'])
+def logout():
+    """
+    Handle user logout by clearing global variables and redirecting to login page.
+    """
+    glb.global_username = None
+    glb.global_email = None
+    glb.global_id = None
+    glb.current_pir_sensor = None
+    glb.current_vibration_sensor = None
+    glb.current_led_status = None
+    glb.current_buzzer_status = None
+    glb.current_lcd_status = None
+    glb.global_successfully_connected = False  # Reset connection flag
     
+    print("User logged out successfully.")
+    
+    return jsonify({"status": "OKE", "message": "Logout successful"}), 200    
 
 
 # API for register
