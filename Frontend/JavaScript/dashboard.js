@@ -7,9 +7,8 @@ function loadPage(page) {
       window.location.hash = page;
       if (page === 'data') initDataPage();
       if (page === 'home') {
-        updateReedSensor(false);
-        updatePirSensor(false);
-        updateVibrationSensor(false);
+
+        initHomePage();
       }
       if (page === 'settings') initSettingsPage();
     });

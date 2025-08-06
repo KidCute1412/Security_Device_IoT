@@ -1,4 +1,4 @@
-import {globals} from "./global.js";
+
 
 function login(){
     const account = document.getElementById("account").value;

@@ -7,7 +7,7 @@ import Backend.global_vars as global_vars
 
 
 # Login and Register API
-
+login_success = False
 def check_login():
     data = request.get_json()
     username = data.get('username')
@@ -54,8 +54,10 @@ def get_user_info(username):
         return None    
     
 def login():
+    global login_success
     if request.method == 'POST':
-        if check_login():
+        login_success = check_login()
+        if login_success:
             user_info = get_user_info(request.get_json().get('username'))
             if not user_info:
                 return jsonify({"status": "ERROR", "message": "User not found"}), 404

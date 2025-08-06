@@ -5,7 +5,7 @@
             <div class = "switch-container">
                 <h2>LED</h2>
                 <label class="switch">
-                    <input type="checkbox" id = "checkbox-led" onchange="updateLedStatus(this.checked)">
+                    <input type="checkbox" id = "checkbox-led" onchange="updateLedStatus(this.checked); sendCommandToDevices()">
                     <span class="slider">
                         <span class = "slider-toggle"></span>
                     </span>  
@@ -15,7 +15,7 @@
             <div class = "switch-container">
                 <h2>BUZZER</h2>
                 <label class="switch">
-                    <input type="checkbox" id = "checkbox-buzzer"onchange="updateBuzzerStatus(this.checked)">
+                    <input type="checkbox" id = "checkbox-buzzer"onchange="updateBuzzerStatus(this.checked); sendCommandToDevices()">
                     <span class="slider">
                         <span class = "slider-toggle"></span>
                     </span>  
@@ -24,9 +24,9 @@
             </div>
             <div class = "switch-container">
                 <h2>LCD Status</h2>
-                <select id="lcd-select" class = "lcd-select" onchange="updateLCD(this.value)">
-                    <option value = "1" >Chống Trộm</option>
-                    <option value="2">Gia chủ</option>
+                <select id="lcd-select" class = "lcd-select" onchange="updateLcdStatus(this.value); sendCommandToDevices()">
+                    <option value = '0' >Chống Trộm</option>
+                    <option value = '1' >Gia chủ</option>
                 </select>
                 <h2>LCD: <span id="lcd-status">Chống Trộm Mode</span></h2>
 

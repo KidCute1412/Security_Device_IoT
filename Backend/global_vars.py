@@ -10,6 +10,8 @@ current_led_status = None
 current_buzzer_status = None
 current_lcd_status = None
 
+tmp_pir_sensor = False  # Temporary variable to store sensor data
+tmp_vibration_sensor = False  # Temporary variable to store sensor data
 
 
 
