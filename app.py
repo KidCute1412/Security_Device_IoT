@@ -107,5 +107,4 @@ if __name__ == '__main__':
     mqtt_client.connect("broker.hivemq.com", 1883, 60)
     mqtt_client.subscribe("/data/pir_sensor")
     mqtt_client.loop_start()
-
-    app.run(debug=True, use_reloader=False) 
+    app.run(debug=True, use_reloader=False)
