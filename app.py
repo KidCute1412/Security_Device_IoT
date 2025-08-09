@@ -52,11 +52,35 @@ def serve_frontend(filename):
 @app.route('/api/sensor_status', methods=['GET'])
 
 def get_status():
-   reed_sensor, pir_sensor, vibration_sensor = simulate_sensor()
-   return jsonify({"status": "OKE", "message": "Server is running",
-                   "reed_sensor": reed_sensor,
-                   "pir_sensor": pir_sensor,
-                   "vibration_sensor": vibration_sensor})
+    from Backend.cloud_database import sensor_data_collection
+    from Backend.global_vars import global_id
+    import datetime
+    reed_sensor, pir_sensor, vibration_sensor = simulate_sensor()
+    # Save to cloud if any sensor is True
+    now = datetime.datetime.utcnow()
+    user_id = global_id
+    if reed_sensor:
+        sensor_data_collection.insert_one({
+            "user_id": user_id,
+            "sensor_type": "reed_sensor",
+            "timestamp": now
+        })
+    if pir_sensor:
+        sensor_data_collection.insert_one({
+            "user_id": user_id,
+            "sensor_type": "pir_sensor",
+            "timestamp": now
+        })
+    if vibration_sensor:
+        sensor_data_collection.insert_one({
+            "user_id": user_id,
+            "sensor_type": "vibration_sensor",
+            "timestamp": now
+        })
+    return jsonify({"status": "OKE", "message": "Server is running",
+                    "reed_sensor": reed_sensor,
+                    "pir_sensor": pir_sensor,
+                    "vibration_sensor": vibration_sensor})
 
 # API for login
 @app.route('/api/login', methods=['POST'])
