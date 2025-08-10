@@ -10,6 +10,9 @@ current_led_status = None
 current_buzzer_status = None
 current_lcd_status = None
 
+global_successfully_connected = False # Flag check if device and web app are connected
+tmp_pir_sensor = False  # Temporary variable to store sensor data
+tmp_vibration_sensor = False  # Temporary variable to store sensor data
 
 
 

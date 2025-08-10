@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IoT Skills Final Project</title>
     <link rel="stylesheet" href="../CSS/main-content.css">
+    <link rel="stylesheet" href="../CSS/settings.css">
     <link rel="stylesheet" href="../CSS/home.css">
     <link rel="stylesheet" href="../CSS/data.css">
-    <link rel="stylesheet" href="../CSS/settings.css">
     <link rel="stylesheet" href="../CSS/side-bar.css">
     <link rel="stylesheet" href="../CSS/chat-bot.css">
     <link href="https://fonts.googleapis.com/css2?family=Baloo+2&display=swap" rel="stylesheet">
@@ -18,7 +18,7 @@
         <button class = 'side-bar-button' onclick = "loadPage('home')">Home</button>
         <button class = 'side-bar-button' onclick = "loadPage('data')">Data</button>
         <button class = 'side-bar-button' onclick = "loadPage('settings')">Settings</button>
-        <button class = 'side-bar-button' onclick = "logout()">Log out</button>
+        <button class = 'side-bar-button' onclick = "logout(); stopStatusUpdates()">Log out</button>
     </div>
     <div id="main-content">
     </div>
@@ -44,6 +44,7 @@
 
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <script src="../JavaScript/global.js"></script>
     <script src = "../JavaScript/dashboard.js"></script>
     <script src = "../JavaScript/home.js"></script>
     <script src = "../JavaScript/data.js"></script>

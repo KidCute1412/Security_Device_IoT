@@ -3,7 +3,8 @@ from flask_cors import CORS
 import random
 import Backend.account as account
 import paho.mqtt.client as mqtt
-
+import Backend.mqtt_communication as mqtt
+import Backend.global_vars as glb
 
 # Biến toàn cục lưu dữ liệu sensor
 mqtt_data = {
@@ -12,18 +13,11 @@ mqtt_data = {
     "vibration_sensor": False
 }
 
-def on_message(client, userdata, msg):
-    print(f"[DEBUG] Callback from client id: {id(client)}")
-    topic = msg.topic
-    payload = msg.payload.decode()
-    
-    print(f"[MQTT] Topic: {topic}, Payload: {payload}") 
+
 
     
 
-# MQTT setup
-mqtt_client = mqtt.Client()
-mqtt_client.on_message = on_message
+
 import Backend.gemini_api as gemini_api
 import Backend.filter_data as filter_data
 import Backend.chatbot as chatbot
@@ -41,10 +35,14 @@ def simulate_sensor():
 # Initial page
 @app.route('/')
 def first_page():
-   return redirect("/Frontend/HTML/login.html")
+   if not glb.global_successfully_connected:
+    return redirect("/Frontend/HTML/login.html")
+   else:
+    return redirect("/Frontend/HTML/dashboard.html")
 @app.route('/Frontend/<path:filename>')
 def serve_frontend(filename):
     return send_from_directory('Frontend', filename)
+
 
 
 
@@ -82,10 +80,80 @@ def get_status():
                     "pir_sensor": pir_sensor,
                     "vibration_sensor": vibration_sensor})
 
+# API for getting all status
+@app.route('/api/get_all_status', methods=['GET'])
+def get_all_status():
+    """
+    Get all current device and sensor status via MQTT
+    This function is called only when someone makes a GET request to /api/get_all_status
+    """
+    try:
+        # This will return current global variables from MQTT
+        import Backend.global_vars as glb
+        
+        return jsonify({
+            "status": "OKE",
+            "message": "All status retrieved successfully",
+            "pir_status": glb.current_pir_sensor,
+            "vibration_status": glb.current_vibration_sensor,
+            "led_status": glb.current_led_status,
+            "buzzer_status": glb.current_buzzer_status,
+            "lcd_status": glb.current_lcd_status
+        })
+    except Exception as e:
+        return jsonify({
+            "status": "ERROR",
+            "message": f"Error getting status: {str(e)}"
+        }), 500
+
+
+# API for controlling devices
+
+@app.route('/api/control_devices', methods=['POST'])
+def control_devices():
+    return mqtt.command_to_devices()
+
 # API for login
 @app.route('/api/login', methods=['POST'])
 def login_process():
-   return account.login()
+    # Call the login function
+    result = account.login()
+    
+    # Check if login was successful and call unification
+    if account.login_success:
+        print("Login success:", account.login_success)
+        try:
+            mqtt.unification()
+            mqtt.setup_mqtt_subscription()
+            print("MQTT unification sent successfully")
+        except Exception as e:
+            print(f"Error sending MQTT unification: {e}")
+    else:
+        print("Login failed:", account.login_success)
+    
+    return result
+
+
+
+# API for logout
+@app.route('/api/logout', methods=['POST'])
+def logout():
+    """
+    Handle user logout by clearing global variables and redirecting to login page.
+    """
+    glb.global_username = None
+    glb.global_email = None
+    glb.global_id = None
+    glb.current_pir_sensor = None
+    glb.current_vibration_sensor = None
+    glb.current_led_status = None
+    glb.current_buzzer_status = None
+    glb.current_lcd_status = None
+    glb.global_successfully_connected = False  # Reset connection flag
+    
+    print("User logged out successfully.")
+    
+    return jsonify({"status": "OKE", "message": "Logout successful"}), 200    
 
 
 # API for register
@@ -126,9 +194,12 @@ def ai_response_chart2():
 def chatbot_response():
     return chatbot.chatbot_response()
 
+
+
 if __name__ == '__main__':
-    # Chỉ chạy MQTT client ở process chính
+    # Initialize MQTT client
     mqtt_client.connect("broker.hivemq.com", 1883, 60)
     mqtt_client.subscribe("/data/pir_sensor")
     mqtt_client.loop_start()
+    
     app.run(debug=True, use_reloader=False)

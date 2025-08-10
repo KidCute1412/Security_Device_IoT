@@ -1,6 +1,8 @@
 from pymongo import MongoClient
 import os
 from dotenv import load_dotenv
+import Backend.global_vars as glb
+from datetime import datetime, timezone
 
 load_dotenv()
 
@@ -46,4 +48,57 @@ alert_collection = db["alert"]
 
 # Some constraints
 user_account_collection.create_index("username", unique=True)
+
+
+
+
+
+# Data from esp32 to cloud
+
+def save_sensor_data(sensor_type):
+    if not glb.global_id:
+        print("Global ID is not set. Cannot save sensor data.")
+        return False
+    
+    # Get current UTC timestamp - modern way (recommended)
+    utc_timestamp = datetime.now(timezone.utc)
+    print(f"UTC Timestamp: {utc_timestamp}")
+    
+    data = {
+        "user_id": glb.global_id,
+        "sensor_type": sensor_type,
+        "timestamp": utc_timestamp
+    }
+    
+    try:
+        sensor_data_collection.insert_one(data)
+        print(f"Sensor data saved: {data}")
+        return True
+    except Exception as e:
+        print(f"Error saving sensor data: {e}")
+        return False
+
+def save_alert():
+    if not glb.global_id:
+        print("Global ID is not set. Cannot save alert.")
+        return False
+    
+    # Get current UTC timestamp - modern way (recommended)
+    utc_timestamp = datetime.now(timezone.utc)
+    print(f"UTC Timestamp: {utc_timestamp}")
+    
+    data = {
+        "user_id": glb.global_id,
+        "timestamp": utc_timestamp
+    }
+    
+    try:
+        alert_collection.insert_one(data)
+        print(f"Alert saved: {data}")
+        return True
+    except Exception as e:
+        print(f"Error saving alert: {e}")
+        return False
+
+
 
