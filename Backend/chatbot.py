@@ -184,7 +184,7 @@ def handle_realtime_status(list_devices):
         elif device == "buzzer":
             status_text += f"Trạng thái buzzer hiện tại: {'Bật' if gv.current_buzzer_status else 'Tắt'}\n"
         elif device == "lcd":
-            status_text += f"Trạng thái màn hình LCD hiện tại: {"Chống trộm" if gv.current_lcd_status == 1 else "Thông tin"}\n"
+            status_text += f"Trạng thái màn hình LCD hiện tại: {'Chống trộm' if gv.current_lcd_status == 1 else 'Thông tin'}\n"
 
 def today():
     return date.today().strftime("%Y-%m-%d")
