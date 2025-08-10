@@ -44,3 +44,7 @@ function initHomePage() {
   updatePirSensor(window.pir_status);
   updateVibrationSensor(window.vibration_status);
 }
+
+setInterval(() => {
+  initHomePage();
+}, 1000); // Update every 1 seconds
