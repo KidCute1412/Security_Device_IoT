@@ -5,17 +5,7 @@ import Backend.account as account
 import paho.mqtt.client as mqtt
 import Backend.mqtt_communication as mqtt
 import Backend.global_vars as glb
-
-# Biến toàn cục lưu dữ liệu sensor
-mqtt_data = {
-    "reed_sensor": False,
-    "pir_sensor": False,
-    "vibration_sensor": False
-}
-
-
-
-    
+import Backend.cloud_database as cloud
 
 
 import Backend.gemini_api as gemini_api
@@ -24,14 +14,14 @@ import Backend.chatbot as chatbot
 app = Flask(__name__)
 CORS(app) # Enable CORS for all routes
 
-# Bonus function
-def simulate_sensor():
-   # Simulate sensor data
-   reed_sensor = random.choice([True, False])
-   pir_sensor = random.choice([True, False])
-   vibration_sensor = random.choice([True, False])
+# # Bonus function
+# def simulate_sensor():
+#    # Simulate sensor data
+#    reed_sensor = random.choice([True, False])
+#    pir_sensor = random.choice([True, False])
+#    vibration_sensor = random.choice([True, False])
 
-   return reed_sensor, pir_sensor, vibration_sensor
+#    return reed_sensor, pir_sensor, vibration_sensor
 # Initial page
 @app.route('/')
 def first_page():
@@ -46,50 +36,50 @@ def serve_frontend(filename):
 
 
 
-# API for getting current sensor data (page HOME)
-@app.route('/api/sensor_status', methods=['GET'])
+# # API for getting current sensor data (page HOME)
+# @app.route('/api/sensor_status', methods=['GET'])
 
-def get_status():
-    from Backend.cloud_database import sensor_data_collection, alert_collection
-    from Backend.global_vars import global_id
-    import datetime
-    global mqtt_data
-    reed_sensor, pir_sensor, vibration_sensor = simulate_sensor()
-    now = datetime.datetime.now()
-    user_id = global_id
+# def get_status():
+#     from Backend.cloud_database import sensor_data_collection, alert_collection
+#     from Backend.global_vars import global_id
+#     import datetime
+#     global mqtt_data
+#     reed_sensor, pir_sensor, vibration_sensor = simulate_sensor()
+#     now = datetime.datetime.now()
+#     user_id = global_id
 
-    # Detect rising edge (False -> True) for each sensor
-    if not mqtt_data["pir_sensor"] and pir_sensor:
-        sensor_data_collection.insert_one({
-            "user_id": user_id,
-            "sensor_type": "pir_sensor",
-            "timestamp": now
-        })
-    if not mqtt_data["vibration_sensor"] and vibration_sensor:
-        sensor_data_collection.insert_one({
-            "user_id": user_id,
-            "sensor_type": "vibration_sensor",
-            "timestamp": now
-        })
-    # Alert if both pir and vibration have rising edge in this call
-    if (not mqtt_data["pir_sensor"] and pir_sensor) and (not mqtt_data["vibration_sensor"] and vibration_sensor):
-        alert_collection.insert_one({
-            "user_id": user_id,
-            "timestamp": now
-        })
+#     # Detect rising edge (False -> True) for each sensor
+#     if not mqtt_data["pir_sensor"] and pir_sensor:
+#         sensor_data_collection.insert_one({
+#             "user_id": user_id,
+#             "sensor_type": "pir_sensor",
+#             "timestamp": now
+#         })
+#     if not mqtt_data["vibration_sensor"] and vibration_sensor:
+#         sensor_data_collection.insert_one({
+#             "user_id": user_id,
+#             "sensor_type": "vibration_sensor",
+#             "timestamp": now
+#         })
+#     # Alert if both pir and vibration have rising edge in this call
+#     if (not mqtt_data["pir_sensor"] and pir_sensor) and (not mqtt_data["vibration_sensor"] and vibration_sensor):
+#         alert_collection.insert_one({
+#             "user_id": user_id,
+#             "timestamp": now
+#         })
 
-    # Update previous state
-    mqtt_data["reed_sensor"] = reed_sensor
-    mqtt_data["pir_sensor"] = pir_sensor
-    mqtt_data["vibration_sensor"] = vibration_sensor
+#     # Update previous state
+#     mqtt_data["reed_sensor"] = reed_sensor
+#     mqtt_data["pir_sensor"] = pir_sensor
+#     mqtt_data["vibration_sensor"] = vibration_sensor
 
-    return jsonify({
-        "status": "OKE",
-        "message": "Server is running",
-        "reed_sensor": reed_sensor,
-        "pir_sensor": pir_sensor,
-        "vibration_sensor": vibration_sensor,
-    })
+#     return jsonify({
+#         "status": "OKE",
+#         "message": "Server is running",
+#         "reed_sensor": reed_sensor,
+#         "pir_sensor": pir_sensor,
+#         "vibration_sensor": vibration_sensor,
+#     })
 
 # API for getting all status
 @app.route('/api/get_all_status', methods=['GET'])
@@ -208,7 +198,8 @@ def chatbot_response():
 
 
 if __name__ == '__main__':
-    # Initialize MQTT client
-
+    
+    # Update cloud every 1 second
+    cloud.start_update_thread()
     
     app.run(debug=True, use_reloader=False)

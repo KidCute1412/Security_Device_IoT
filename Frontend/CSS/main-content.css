@@ -1,7 +1,7 @@
 #main-content{
     display: flex;
     position: relative;
-    margin-left: 200px;
+    margin-left: 20%;
     background-color:rgb(189, 208, 239);
     flex-direction: column;
 }

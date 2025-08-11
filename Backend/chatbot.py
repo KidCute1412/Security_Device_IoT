@@ -9,7 +9,7 @@ from datetime import date, datetime
 from Backend.cloud_database import sensor_data_collection, alert_collection
 import Backend.global_vars as gv
 
-type_question = ["alert_history", "lastest_alert", "compare_days", "device_info", "unknown",
+type_question = ["alert_statistic", "lastest_alert", "compare_days", "sensor_device_info", "unknown",
                  "realtime_status"]
 
 # Alert_history: lần báo động, số pir, vibaration trong 1 ngày cụ thể (cần 1 day và ko cảm biến)
@@ -23,7 +23,7 @@ type_question = ["alert_history", "lastest_alert", "compare_days", "device_info"
 
 # Realtime_status: Trả về trạng thái hiện tại của thiết bị (cần 1 device và ko ngày tháng)
 
-def handle_alert_history(list_days, list_devices):
+def handle_alert_statistic(list_days, list_devices):
     if len(list_days) == 0:
         return "Dữ liệu ngày tháng không đầy đủ, vui lòng cung cấp ít nhất một ngày."
     if len(list_days) > 1:
@@ -85,10 +85,12 @@ def handle_lastest_alert(list_days, list_devices):
                                               "timestamp": {"$gte": start_date, 
                                                             "$lt": end_date}},
                                              sort=[("timestamp", -1)])
+    alert_text = ""
     if not latest_alert:
-        return "Không có cảnh báo mới nhất trong ngày này."
+        alert_text = "Không có cảnh báo mới nhất trong ngày này."
     
-    alert_text = f"Cảnh báo mới nhất trong ngày {day}: {latest_alert['timestamp']}"
+    else:
+        alert_text = f"Cảnh báo mới nhất trong ngày {day}: {latest_alert['timestamp']}"
     
     if len(list_devices) == 0:
         return alert_text
@@ -176,24 +178,30 @@ def handle_realtime_status(list_devices):
     status_text = ""
     for device in list_devices:
         if device == "pir":
-            status_text += f"Cảm biến chuyển động PIR hiện tại: {gv.current_pir_sensor}\n"
+            result = "Phát hiện chuyển động" if gv.current_pir_sensor else "Không phát hiện chuyển động"
+            status_text += f"Cảm biến chuyển động PIR hiện tại: {result}\n"
         elif device == "vibration":
-            status_text += f"Cảm biến rung hiện tại: {gv.current_vibration_sensor}\n"
+            result = "Phát hiện rung" if gv.current_vibration_sensor else "Không phát hiện rung"
+            status_text += f"Cảm biến rung hiện tại: {result}\n"
         elif device == "led":
-            status_text += f"Trạng thái đèn LED hiện tại: {'Bật' if gv.current_led_status else 'Tắt'}\n"
+            result = "Bật" if gv.current_led_status else "Tắt"
+            status_text += f"Trạng thái đèn LED hiện tại: {result}\n"
         elif device == "buzzer":
-            status_text += f"Trạng thái buzzer hiện tại: {'Bật' if gv.current_buzzer_status else 'Tắt'}\n"
+            result = "Bật" if gv.current_buzzer_status else "Tắt"
+            status_text += f"Trạng thái buzzer hiện tại: {result}\n"
         elif device == "lcd":
-            status_text += f"Trạng thái màn hình LCD hiện tại: {'Chống trộm' if gv.current_lcd_status == 1 else 'Thông tin'}\n"
+            result = "Chống trộm" if gv.current_lcd_status == 1 else "Thông tin"
+            status_text += f"Trạng thái màn hình LCD hiện tại: {result}\n"
+    return status_text.strip()        
 
 def today():
     return date.today().strftime("%Y-%m-%d")
 
 def handle_question_type(type, list_days, list_devices):
-    if type == "alert_history":
+    if type == "alert_statistic":
         #simulate:
         # return f"Đây là lịch sử cảnh báo trong ngày {list_days[0]} cho các thiết bị {', '.join(list_devices)}"
-        return handle_alert_history(list_days, list_devices)
+        return handle_alert_statistic(list_days, list_devices)
     elif type == "lastest_alert":
         # simulate:
         if len(list_days) == 0:
@@ -204,7 +212,7 @@ def handle_question_type(type, list_days, list_devices):
         # simulate:
         # return f"Đây là so sánh giữa ngày {list_days[0]} và {list_days[1]} cho các thiết bị {', '.join(list_devices)}"
         return handle_compare_days(list_days, list_devices)
-    elif type == "device_info":
+    elif type == "sensor_device_info":
         # simulate:
         # return f"Đây là thông tin về các thiết bị {', '.join(list_devices)}"
         return handle_device_info(list_devices)
@@ -232,19 +240,15 @@ def chatbot_response():
 
         prompt = f"""Phân loại câu hỏi của người dùng thành các loại sau: {', '.join(type_question)}
         Dưới đây là câu hỏi của người dùng: {user_message}.
-        Trả lời câu hỏi của người dùng theo dạng JSON với các trường "type" (loại câu hỏi), "days" (danh sách các ngày) và "devices" (danh sách các thiết bị)
-        (Kết quả trả về đúng định dạng chuẩn json không thêm bớt gì thêm, không trả về title của prompt hay gì cả).
-        Nếu dữ liệu ngày tháng năm không đầy đủ, ví dụ thiếu năm thì hãy mặc định là năm hiện tại, nếu thiếu tháng thì hãy mặc định là tháng hiện tại.
-        Nếu thiếu ngày thì hãy mặc định là ngày đầu tiên của tháng hiện tại.
-        Các thiết bị chỉ bao gồm: cảm biến rung, cảm biến chuyển động pir, đèn led, buzzer, màn hình lcd.
-        (Biết rằng hôm nay là {today()}).
-
         Định dạng trả về JSON:
         {{
             "type": loại câu hỏi,
             "days": danh sách các ngày (dạng "YYYY-MM-DD"),
             "devices": danh sách các thiết bị (["pir", "vibration", "led", "buzzer", "lcd"] (Chỉ hiển thị những giá trị trong danh sách này))
         }}
+        Nếu dữ liệu ngày tháng năm không đầy đủ, ví dụ thiếu năm thì hãy mặc định là năm hiện tại, nếu thiếu tháng thì hãy mặc định là tháng hiện tại.
+        Nếu thiếu ngày thì hãy mặc định là ngày đầu tiên của tháng hiện tại.
+        (Biết rằng hôm nay là {today()}).
         """
         chat_response = model.generate_content(prompt) # This is a string has JSON format
         

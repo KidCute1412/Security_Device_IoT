@@ -99,9 +99,9 @@ def process_received_data(json_data):
         # Update global variables with received sensor data
         # INPUT DEVICES
         if "pir_sensor" in json_data:
-            glb.current_pir_sensor = json_data["pir_sensor"]
+            glb.tmp_pir_sensor = json_data["pir_sensor"]
         if "vibration_sensor" in json_data:
-            glb.current_vibration_sensor = json_data["vibration_sensor"]
+            glb.tmp_vibration_sensor = json_data["vibration_sensor"]
         
         # OUPUT DEVICES
         if "led" in json_data:

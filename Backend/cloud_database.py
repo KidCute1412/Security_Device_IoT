@@ -3,6 +3,7 @@ import os
 from dotenv import load_dotenv
 import Backend.global_vars as glb
 from datetime import datetime, timezone
+import threading
 
 load_dotenv()
 
@@ -60,9 +61,9 @@ def save_sensor_data(sensor_type):
         print("Global ID is not set. Cannot save sensor data.")
         return False
     
-    # Get current UTC timestamp - modern way (recommended)
-    utc_timestamp = datetime.now(timezone.utc)
-    print(f"UTC Timestamp: {utc_timestamp}")
+    
+    utc_timestamp = datetime.now() # local time
+    print(f"Timestamp: {utc_timestamp}")
     
     data = {
         "user_id": glb.global_id,
@@ -84,8 +85,8 @@ def save_alert():
         return False
     
     # Get current UTC timestamp - modern way (recommended)
-    utc_timestamp = datetime.now(timezone.utc)
-    print(f"UTC Timestamp: {utc_timestamp}")
+    utc_timestamp = datetime.now()
+    print(f"Timestamp: {utc_timestamp}")
     
     data = {
         "user_id": glb.global_id,
@@ -102,3 +103,43 @@ def save_alert():
 
 
 
+def update_data_to_cloud():
+    while True:
+        try:
+            # Save alert if both sensors are triggered
+            if (glb.tmp_pir_sensor and glb.tmp_vibration_sensor) and\
+            (not glb.current_pir_sensor or not glb.current_vibration_sensor):
+                save_alert()
+
+            # Save sensor data if the sensors are triggered
+            if glb.tmp_pir_sensor != glb.current_pir_sensor:
+                if glb.tmp_pir_sensor: # Tmp True but current False
+                    save_sensor_data("pir_sensor")
+                glb.current_pir_sensor = glb.tmp_pir_sensor
+            
+            if glb.tmp_vibration_sensor != glb.current_vibration_sensor:
+                if glb.tmp_vibration_sensor: # Tmp True but current False
+                    save_sensor_data("vibration_sensor")
+                glb.current_vibration_sensor = glb.tmp_vibration_sensor
+            
+            
+            
+            # Sleep for a while before the next check
+            threading.Event().wait(1)  # Adjust the interval as needed
+        except Exception as e:
+            print(f"Error in update_data_to_cloud: {e}")
+
+
+
+
+
+
+
+def start_update_thread():
+    """
+    Start a background thread to update data to the cloud.
+    """
+    update_thread = threading.Thread(target=update_data_to_cloud)
+    update_thread.daemon = True  # Daemonize thread
+    update_thread.start()
+    print("Background thread for updating data to cloud started.")

@@ -1,8 +1,3 @@
-let reedSensorValue = false; // Simulated initial state
-let pirSensorValue = false; // Simulated initial state
-let vibrationSensorValue = false; // Simulated initial state
-
-
 
 
 
@@ -40,7 +35,28 @@ function updateVibrationSensor(isVibrationDetected) {
 }
 
 
+function updateConclusionText(isMotionDetected, isVibrationDetected) {
+  const conclusionText = document.getElementById("conclusion-text");
+
+  if (isMotionDetected && isVibrationDetected) {
+    conclusionText.textContent = "Kết luận: Phát hiện đột nhập";
+  }
+  else if (isMotionDetected && !isVibrationDetected) {
+    conclusionText.textContent = "Kết luận: Phát hiện có người";
+  }
+  else if (!isMotionDetected && isVibrationDetected) {
+    conclusionText.textContent = "Kết luận: Phát hiện rung động";
+  } else {
+    conclusionText.textContent = "Kết luận: Không phát hiện nguy hiểm";
+  }
+}
+
 function initHomePage() {
   updatePirSensor(window.pir_status);
   updateVibrationSensor(window.vibration_status);
+  updateConclusionText(window.pir_status, window.vibration_status);
 }
+
+setInterval(() => {
+  initHomePage();
+}, 1000); // Update every 1 seconds

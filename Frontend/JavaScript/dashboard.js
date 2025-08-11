@@ -86,7 +86,7 @@ function initializeStatusUpdates() {
     // Then update every 1 second after the initial delay
     setTimeout(() => {
         console.log("Starting regular interval updates...");
-        const intervalId = setInterval(getAndUpdateStatus, 5000);
+        const intervalId = setInterval(getAndUpdateStatus, 1000);
         window.statusUpdateInterval = intervalId;
     }, 3000); // Start interval after 3 seconds
 }

@@ -1,5 +1,5 @@
 body{
-    padding-bottom: 500px;
+    padding-bottom: 30px;
     background-color:rgb(189, 208, 239);
 }
 .side-bar{
@@ -11,11 +11,14 @@ body{
     margin: 0;
     top: 0;
     left: 0;
-    bottom: 10px;
-    width: 200px;
+    bottom: 0px;
+    /* width: 200px; */
+    width: 20%;
     justify-content:flex-start;
     align-items: center;
-    border-radius: 0 0 30px 0;
+    border-radius: 0 0 10px 0;
+    border: none;
+    box-shadow: 0 4px 8px rgb(106, 69, 242);
     background-color:#74a2ed;
     z-index: 1000;
 
