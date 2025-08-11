@@ -162,10 +162,10 @@
     font-size: 17px;
     font-family: 'Baloo 2', cursive;
     margin-top: 0px;
-    color: #2768eb;
-    border-radius: 10px;
+    color: #010101;
+    border-radius: 30px;
     border: 1px solid #ccc;
-    background-color: #a8ceeb;
+    background-color: #ffffff;
     overflow-y: auto;
     height: 100px;
     box-sizing: border-box;
