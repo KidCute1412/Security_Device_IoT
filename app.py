@@ -50,35 +50,46 @@ def serve_frontend(filename):
 @app.route('/api/sensor_status', methods=['GET'])
 
 def get_status():
-    from Backend.cloud_database import sensor_data_collection
+    from Backend.cloud_database import sensor_data_collection, alert_collection
     from Backend.global_vars import global_id
     import datetime
+    global mqtt_data
     reed_sensor, pir_sensor, vibration_sensor = simulate_sensor()
-    # Save to cloud if any sensor is True
-    now = datetime.datetime.utcnow()
+    now = datetime.datetime.now()
     user_id = global_id
-    if reed_sensor:
-        sensor_data_collection.insert_one({
-            "user_id": user_id,
-            "sensor_type": "reed_sensor",
-            "timestamp": now
-        })
-    if pir_sensor:
+
+    # Detect rising edge (False -> True) for each sensor
+    if not mqtt_data["pir_sensor"] and pir_sensor:
         sensor_data_collection.insert_one({
             "user_id": user_id,
             "sensor_type": "pir_sensor",
             "timestamp": now
         })
-    if vibration_sensor:
+    if not mqtt_data["vibration_sensor"] and vibration_sensor:
         sensor_data_collection.insert_one({
             "user_id": user_id,
             "sensor_type": "vibration_sensor",
             "timestamp": now
         })
-    return jsonify({"status": "OKE", "message": "Server is running",
-                    "reed_sensor": reed_sensor,
-                    "pir_sensor": pir_sensor,
-                    "vibration_sensor": vibration_sensor})
+    # Alert if both pir and vibration have rising edge in this call
+    if (not mqtt_data["pir_sensor"] and pir_sensor) and (not mqtt_data["vibration_sensor"] and vibration_sensor):
+        alert_collection.insert_one({
+            "user_id": user_id,
+            "timestamp": now
+        })
+
+    # Update previous state
+    mqtt_data["reed_sensor"] = reed_sensor
+    mqtt_data["pir_sensor"] = pir_sensor
+    mqtt_data["vibration_sensor"] = vibration_sensor
+
+    return jsonify({
+        "status": "OKE",
+        "message": "Server is running",
+        "reed_sensor": reed_sensor,
+        "pir_sensor": pir_sensor,
+        "vibration_sensor": vibration_sensor,
+    })
 
 # API for getting all status
 @app.route('/api/get_all_status', methods=['GET'])
