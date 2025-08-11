@@ -121,17 +121,11 @@ def update_data_to_cloud():
                 if glb.tmp_vibration_sensor: # Tmp True but current False
                     save_sensor_data("vibration_sensor")
                 glb.current_vibration_sensor = glb.tmp_vibration_sensor
-            
-            
-            
+
             # Sleep for a while before the next check
             threading.Event().wait(1)  # Adjust the interval as needed
-        except Exception as e:
+        except Exception as e: 
             print(f"Error in update_data_to_cloud: {e}")
-
-
-
-
 
 
 

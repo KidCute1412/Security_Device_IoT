@@ -135,3 +135,4 @@ def ai_response_chart2():
         "message": "Generative AI response for chart 2 successful",
         "analysis": analysis
     }), 200
+

@@ -53,7 +53,7 @@ def handle_alert_statistic(list_days, list_devices):
     if "pir" in list_devices:
         print (gv.global_id)
         pir_sensors = sensor_data_collection.find({"user_id": gv.global_id,
-                                                    "sensor_type": "pir", 
+                                                    "sensor_type": "pir_sensor", 
                                                    "timestamp": {"$gte": start_date, 
                                                                  "$lt": end_date}})
         if not pir_sensors:
@@ -61,7 +61,7 @@ def handle_alert_statistic(list_days, list_devices):
         else:
             pir_sensor_text = f"Có {pir_sensors.count()} dữ liệu cảm biến chuyển động PIR trong ngày {day}."
     if "vibration" in list_devices:
-        vibration_sensors = sensor_data_collection.find({"user_id": gv.global_id, "sensor_type": "vibration", 
+        vibration_sensors = sensor_data_collection.find({"user_id": gv.global_id, "sensor_type": "vibration_sensor", 
                                                         "timestamp": {"$gte": start_date, 
                                                                       "$lt": end_date}})
         
