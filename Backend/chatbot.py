@@ -53,7 +53,7 @@ def handle_alert_statistic(list_days, list_devices):
     if "pir" in list_devices:
         print (gv.global_id)
         pir_sensors = sensor_data_collection.find({"user_id": gv.global_id,
-                                                    "sensor_type": "pir", 
+                                                    "sensor_type": "pir_sensor", 
                                                    "timestamp": {"$gte": start_date, 
                                                                  "$lt": end_date}})
         if not pir_sensors:
@@ -61,7 +61,7 @@ def handle_alert_statistic(list_days, list_devices):
         else:
             pir_sensor_text = f"Có {pir_sensors.count()} dữ liệu cảm biến chuyển động PIR trong ngày {day}."
     if "vibration" in list_devices:
-        vibration_sensors = sensor_data_collection.find({"user_id": gv.global_id, "sensor_type": "vibration", 
+        vibration_sensors = sensor_data_collection.find({"user_id": gv.global_id, "sensor_type": "vibration_sensor", 
                                                         "timestamp": {"$gte": start_date, 
                                                                       "$lt": end_date}})
         
@@ -96,7 +96,7 @@ def handle_lastest_alert(list_days, list_devices):
         return alert_text
     
     if "pir" in list_devices:
-        pir_sensor = sensor_data_collection.find_one({"user_id": gv.global_id, "sensor_type": "pir", 
+        pir_sensor = sensor_data_collection.find_one({"user_id": gv.global_id, "sensor_type": "pir_sensor", 
                                                       "timestamp": {"$gte": start_date, 
                                                                     "$lt": end_date}},
                                                      sort=[("timestamp", -1)])
@@ -104,7 +104,7 @@ def handle_lastest_alert(list_days, list_devices):
             alert_text += f"\nCảm biến chuyển động PIR mới nhất: {pir_sensor['timestamp']}"
     
     if "vibration" in list_devices:
-        vibration_sensor = sensor_data_collection.find_one({"user_id": gv.global_id, "sensor_type": "vibration", 
+        vibration_sensor = sensor_data_collection.find_one({"user_id": gv.global_id, "sensor_type": "vibration_sensor", 
                                                             "timestamp": {"$gte": start_date, 
                                                                           "$lt": end_date}},
                                                            sort=[("timestamp", -1)])
@@ -137,10 +137,10 @@ def handle_compare_days(list_days, list_devices):
         return alert_text
     
     if "pir" in list_devices:
-        pir_sensors_day1 = sensor_data_collection.find({"user_id": gv.global_id, "sensor_type": "pir", 
+        pir_sensors_day1 = sensor_data_collection.find({"user_id": gv.global_id, "sensor_type": "pir_sensor", 
                                                         "timestamp": {"$gte": start_date1, 
                                                                       "$lt": end_date1}})
-        pir_sensors_day2 = sensor_data_collection.find({"user_id": gv.global_id, "sensor_type": "pir", 
+        pir_sensors_day2 = sensor_data_collection.find({"user_id": gv.global_id, "sensor_type": "pir_sensor", 
                                                         "timestamp": {"$gte": start_date2, 
                                                                       "$lt": end_date2}})
         pir_sensor_text = (f"Có {pir_sensors_day1.count()} dữ liệu cảm biến chuyển động PIR trong ngày {day1} "
@@ -148,10 +148,10 @@ def handle_compare_days(list_days, list_devices):
         alert_text += "\n" + pir_sensor_text
     
     if "vibration" in list_devices:
-        vibration_sensors_day1 = sensor_data_collection.find({"user_id": gv.global_id, "sensor_type": "vibration", 
+        vibration_sensors_day1 = sensor_data_collection.find({"user_id": gv.global_id, "sensor_type": "vibration_sensor", 
                                                               "timestamp": {"$gte": start_date1, 
                                                                             "$lt": end_date1}})
-        vibration_sensors_day2 = sensor_data_collection.find({"user_id": gv.global_id, "sensor_type": "vibration", 
+        vibration_sensors_day2 = sensor_data_collection.find({"user_id": gv.global_id, "sensor_type": "vibration_sensor", 
                                                               "timestamp": {"$gte": start_date2, 
                                                                             "$lt": end_date2}})
         vibration_sensor_text = (f"Có {vibration_sensors_day1.count()} dữ liệu cảm biến rung trong ngày {day1} "

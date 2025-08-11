@@ -113,7 +113,7 @@ function initSettingsPage(){
     updateLcdStatus(String(window.lcd_status));
 }
 
-// setInterval(() => {
-//     const isLedOn = Math.random() < 0.5; // Simulate LED status change
-//     updateLedStatus(isLedOn);
-// }, 5000); // Update every 5 seconds
+setInterval(() => {
+    initSettingsPage();
+}, 1000); // Update every 1 seconds
+
