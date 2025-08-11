@@ -6,7 +6,7 @@ import paho.mqtt.client as mqtt
 import Backend.mqtt_communication as mqtt
 import Backend.global_vars as glb
 import Backend.cloud_database as cloud
-
+import Backend.account as account
 
 import Backend.gemini_api as gemini_api
 import Backend.filter_data as filter_data
@@ -33,53 +33,6 @@ def first_page():
 def serve_frontend(filename):
     return send_from_directory('Frontend', filename)
 
-
-
-
-# # API for getting current sensor data (page HOME)
-# @app.route('/api/sensor_status', methods=['GET'])
-
-# def get_status():
-#     from Backend.cloud_database import sensor_data_collection, alert_collection
-#     from Backend.global_vars import global_id
-#     import datetime
-#     global mqtt_data
-#     reed_sensor, pir_sensor, vibration_sensor = simulate_sensor()
-#     now = datetime.datetime.now()
-#     user_id = global_id
-
-#     # Detect rising edge (False -> True) for each sensor
-#     if not mqtt_data["pir_sensor"] and pir_sensor:
-#         sensor_data_collection.insert_one({
-#             "user_id": user_id,
-#             "sensor_type": "pir_sensor",
-#             "timestamp": now
-#         })
-#     if not mqtt_data["vibration_sensor"] and vibration_sensor:
-#         sensor_data_collection.insert_one({
-#             "user_id": user_id,
-#             "sensor_type": "vibration_sensor",
-#             "timestamp": now
-#         })
-#     # Alert if both pir and vibration have rising edge in this call
-#     if (not mqtt_data["pir_sensor"] and pir_sensor) and (not mqtt_data["vibration_sensor"] and vibration_sensor):
-#         alert_collection.insert_one({
-#             "user_id": user_id,
-#             "timestamp": now
-#         })
-
-#     # Update previous state
-#     mqtt_data["reed_sensor"] = reed_sensor
-#     mqtt_data["pir_sensor"] = pir_sensor
-#     mqtt_data["vibration_sensor"] = vibration_sensor
-
-#     return jsonify({
-#         "status": "OKE",
-#         "message": "Server is running",
-#         "reed_sensor": reed_sensor,
-#         "pir_sensor": pir_sensor,
-#         "vibration_sensor": vibration_sensor,
-#     })
 
 # API for getting all status
 @app.route('/api/get_all_status', methods=['GET'])
@@ -134,7 +87,15 @@ def login_process():
     
     return result
 
+# API for first chart
+@app.route('/api/alerts_per_day', methods=['GET'])
+def alerts_per_day():
+    return filter_data.get_alerts_per_day()
 
+# API for second chart
+@app.route('/api/alerts_per_hour', methods=['GET'])
+def alerts_per_hour():
+    return filter_data.get_alerts_per_hour()
 
 # API for logout
 @app.route('/api/logout', methods=['POST'])
@@ -142,6 +103,10 @@ def logout():
     """
     Handle user logout by clearing global variables and redirecting to login page.
     """
+    try:
+        account.send_logout_email(glb.global_email, glb.global_username)
+    except Exception as e:
+        print(f"[EMAIL ERROR] Could not send logout email: {e}")
     glb.global_username = None
     glb.global_email = None
     glb.global_id = None

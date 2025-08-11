@@ -1,9 +1,75 @@
 from flask import  request, jsonify
 from Backend.gemini_api import model
+from datetime import datetime, timedelta
+from Backend.cloud_database import alert_collection
+import Backend.global_vars as gv
 
 start_date_chart1 = None
 end_date_chart1 = None
 date_chart2 = None
+
+def get_alerts_per_day():
+    try:
+        global start_date_chart1, end_date_chart1
+        # Nếu chưa có giá trị, lấy mặc định 7 ngày gần nhất
+        if not start_date_chart1 or not end_date_chart1:
+            today = datetime.now()
+            start = today - timedelta(days=7)
+            end = today
+            start_date_chart1 = start.strftime("%Y-%m-%d")
+            end_date_chart1 = end.strftime("%Y-%m-%d")
+        else:
+            start = datetime.strptime(start_date_chart1, "%Y-%m-%d")
+            end = datetime.strptime(end_date_chart1, "%Y-%m-%d")
+        end = end + timedelta(days=1)
+        alerts = alert_collection.find({
+            "user_id": gv.global_id,
+            "timestamp": {"$gte": start, "$lt": end}
+        })
+        # Count per day
+        day_counts = {}
+        for alert in alerts:
+            day = alert["timestamp"].strftime("%Y-%m-%d")
+            day_counts[day] = day_counts.get(day, 0) + 1
+        # Fill missing days with 0
+        days = []
+        counts = []
+        cur = start
+        while cur < end:
+            day_str = cur.strftime("%Y-%m-%d")
+            days.append(day_str)
+            counts.append(day_counts.get(day_str, 0))
+            cur += timedelta(days=1)
+        return jsonify({"status": "OKE", "labels": days, "data": counts}), 200
+    except Exception as e:
+        return jsonify({"status": "ERROR", "message": str(e)}), 500
+
+
+def get_alerts_per_hour():
+    try:
+        global date_chart2
+        if not date_chart2:
+            # Default to today if not set
+            date_chart2 = datetime.now().strftime("%Y-%m-%d")
+        date_obj = datetime.strptime(date_chart2, "%Y-%m-%d")
+        start = date_obj
+        end = date_obj + timedelta(days=1)
+        alerts = alert_collection.find({
+            "user_id": gv.global_id,
+            "timestamp": {"$gte": start, "$lt": end}
+        })
+        # Count per hour
+        hour_counts = {}
+        for alert in alerts:
+            hour = alert["timestamp"].hour
+            hour_counts[hour] = hour_counts.get(hour, 0) + 1
+        # Fill missing hours with 0
+        hours = [f"{h}h" for h in range(24)]
+        counts = [hour_counts.get(h, 0) for h in range(24)]
+        return jsonify({"status": "OKE", "labels": hours, "data": counts}), 200
+    except Exception as e:
+        return jsonify({"status": "ERROR", "message": str(e)}), 500
+    
 
 # GET date filter for chart 1
 def get_date_chart1():
