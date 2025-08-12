@@ -337,6 +337,31 @@ void handleSensorData() {
   }
   lastVibrationState = currentVibration;
 
+  if (lcd != lastLcdStatus || lcd == 1 && (led == 1 || buzzer == 1)) {
+  StaticJsonDocument<200> sendModeData;
+  if (lcd == 0) {
+      led = 1;
+      buzzer = 1;
+      sendModeData["led"] = led;
+      sendModeData["buzzer"] = buzzer;
+      sendModeData["lcd"] = 0;
+    } else {
+      led = 0;
+      buzzer = 0;
+      sendModeData["pir_sensor"] = 0;
+      sendModeData["vibration_sensor"] = 0;
+      sendModeData["led"] = led;
+      sendModeData["buzzer"] = buzzer;
+      sendModeData["lcd"] = 1;
+    }
+    char buffer1[256];
+    size_t len = serializeJson(sendModeData, buffer1);
+
+    if (sensorTopic != "") {
+      mqttClient.publish(sensorTopic.c_str(), buffer1, len);
+    }
+  }
+
   
 
   // Gửi trạng thái cảm biến lên mỗi 1 giây
@@ -351,24 +376,28 @@ void handleSensorData() {
     // Gửi MQTT ở đây nếu có:
     // mqttClient.publish("topic", "{...}");
     // Tạo JSON để gửi lại
+    
     StaticJsonDocument<200> sendData;
-    sendData["pir_sensor"] = pir;
-    sendData["vibration_sensor"] = vibration;
-    char buffer[256];
-    size_t len = serializeJson(sendData, buffer);
+    if (lcd == 0) {
+      sendData["pir_sensor"] = pir;
+      sendData["vibration_sensor"] = vibration;
+    }
+    
+    char buffer2[256];
+    size_t len = serializeJson(sendData, buffer2);
 
     // Gửi JSON qua topic động
     if (sensorTopic != "") {
-      mqttClient.publish(sensorTopic.c_str(), buffer, len);
+      mqttClient.publish(sensorTopic.c_str(), buffer2, len);
     }
     
     //Serial.print("Published JSON to ");
     //Serial.println(sensorTopic);
-    Serial.println(buffer);
-    if (vibration == 1 && pir == 1) {
+    Serial.println(buffer2);
+    if (vibration == 1 && pir == 1 && lcd == 0) {
       if ((WiFi.status() == WL_CONNECTED) && ((now - lastSendWarningTime >= SEND_WARNING_INTERVAL) || firstSend)) {
         Serial.println("Gửi thông báo...");
-        sendRequest();
+        //sendRequest();
         lastSendWarningTime = now; // Cập nhật thời gian gửi
         firstSend = false;
       }
@@ -418,9 +447,9 @@ void lcdShowStatus(int lcd) {
     lcdDisplay.clear();
     lcdDisplay.setCursor(0, 0);
     if (lcd == 0) {
-      lcdDisplay.print("Xin chao");
+      lcdDisplay.print("Armed Mode");
     } else if (lcd == 1) {
-      lcdDisplay.print("Bien di");
+      lcdDisplay.print("Home Mode");
     }
     lastLcdStatus = lcd;          // cập nhật lại trạng thái mới
   }

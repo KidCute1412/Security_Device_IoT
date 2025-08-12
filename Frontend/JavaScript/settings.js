@@ -115,5 +115,5 @@ function initSettingsPage(){
 
 setInterval(() => {
     initSettingsPage();
-}, 1000); // Update every 1 seconds
+}, 4); 
 
