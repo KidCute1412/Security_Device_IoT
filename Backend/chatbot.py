@@ -12,7 +12,7 @@ import Backend.global_vars as gv
 type_question = ["alert_statistic", "lastest_alert", "compare_days", "sensor_device_info", "unknown",
                  "realtime_status"]
 
-# Alert_history: lần báo động, số pir, vibaration trong 1 ngày cụ thể (cần 1 day và ko cảm biến)
+# Alert_statistic: lần báo động, số pir, vibaration trong 1 ngày cụ thể (cần 1 day và ko cảm biến)
 # Nếu có thêm tên cảm biến thì chỉ trả về cảm biến đó
 
 # Lastest_alert: Trả về cảnh báo mới nhất (cần 1 day và ko cảm biến) (mặc định ngày hôm nay)
