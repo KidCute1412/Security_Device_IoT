@@ -62,13 +62,13 @@ function updateLcdStatus(value) {  // Fixed: renamed from updateLCDStatus to upd
     const lcdSelect = document.getElementById("lcd-select");
   
     if (value === '0') {
-        lcdStatus.textContent = "Chống Trộm Mode";
+        lcdStatus.textContent = "Armed Mode";
         lcdStatus.style.color = "Red";
         lcdSelect.value = 0; // Update select state
         lcdSelect.style.backgroundColor = "#e96e8f"; // Change select color to match
         window.lcd_status = 0; // Update global variable
     } else if (value === '1') {
-        lcdStatus.textContent = "Gia Chủ Mode";
+        lcdStatus.textContent = "Home Mode";
         lcdStatus.style.color = "blue";
         lcdSelect.value = 1; // Update select state
         lcdSelect.style.backgroundColor = "#6e8fe9"; // Change select color to match

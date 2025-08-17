@@ -103,7 +103,7 @@ def process_received_data(json_data):
         if "vibration_sensor" in json_data:
             glb.tmp_vibration_sensor = json_data["vibration_sensor"]
         
-        # OUPUT DEVICES
+        # OUTPUT DEVICES
         if "led" in json_data:
             glb.current_led_status = json_data["led"]
         if "buzzer" in json_data:

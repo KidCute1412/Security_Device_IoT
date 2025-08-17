@@ -107,7 +107,7 @@ def ai_response_chart1():
     Nếu dữ liệu các ngày không có thì trả về "Không có dữ liệu".
     Nếu dữ liệu các ngày có thì hãy phân tích và đưa ra nhận xét, xu hướng của dữ liệu này. 
     Biết đây là dữ liệu số báo động chống trộm trong các ngày tương ứng.
-    Trả lời khoảng 200 từ. (tất cả là text tiếng Việt)
+    Trả lời khoảng 300 từ. (tất cả là text tiếng Việt)
     """
     response = model.generate_content(prompt)
     analysis = response.text.strip()
@@ -127,7 +127,7 @@ def ai_response_chart2():
     Nếu dữ liệu giờ không có thì trả về "Không có dữ liệu".
     Nếu dữ liệu giờ có thì hãy phân tích và đưa ra nhận xét, xu hướng của dữ liệu này. 
     Biết đây là dữ liệu số báo động chống trộm theo các giờ trong ngày đang xét.
-    Trả lời khoảng 200 từ.(tất cả là text tiếng Việt)"""
+    Trả lời khoảng 300 từ.(tất cả là text tiếng Việt)"""
     response = model.generate_content(prompt)
     analysis = response.text.strip()
     return jsonify({

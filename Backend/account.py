@@ -87,15 +87,15 @@ def login():
 
 # Sign-up API
 # Helper function to send email from a stationary account
-def send_login_email(recipient_email, username):
+def send_register_email(recipient_email, username):
     # Stationary sender account credentials
     sender_email = "lykhai2520@gmail.com"  # Replace with your stationary email
     sender_password = "uedq tldh ixxj iyak"  # Replace with your app password
     smtp_server = "smtp.gmail.com"
     smtp_port = 587
 
-    subject = "Login Notification"
-    body = f"Hello {username},\n\nYou have successfully logged in to your account.\n\nIf this wasn't you, please secure your account immediately.\n\nBest regards,\nSecurity Device IoT Team"
+    subject = "SIGN-UP Notification"
+    body = f"Hello {username},\n\nYou have successfully signed up your account.\n\nIf this wasn't you, please secure your account immediately.\n\nBest regards,\nSecurity Device IoT Team"
 
     msg = MIMEMultipart()
     msg["From"] = sender_email
@@ -188,7 +188,7 @@ def sign_up():
             "email": email
         })
         try:
-            send_login_email(email, username)
+            send_register_email(email, username)
         except Exception as e:
             print(f"[EMAIL ERROR] Could not send login email: {e}")
         return jsonify({"status": "OKE", "message": "Sign-up successful"}), 201
